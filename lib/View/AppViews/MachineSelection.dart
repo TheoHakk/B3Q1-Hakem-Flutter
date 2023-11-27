@@ -1,5 +1,5 @@
-import 'package:b3q1_hakem_projet_flutter/View/AppViews/AddMachine.dart';
-import 'package:b3q1_hakem_projet_flutter/View/AppViews/MainScreen.dart';
+import 'package:b3q1_hakem_projet_flutter/View/AppViews/MachineDetail.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Forms/FormMachine.dart';
 import 'package:flutter/material.dart';
 import '../../Model/Credential.dart';
 import '../../Model/Machine.dart';
@@ -36,7 +36,7 @@ class _MachineSelection extends State<MachineSelection> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const AddMachine(title: "Deploy new machine")));
+              builder: (context) => const FormMachine(title: "Deploy new machine")));
     }
 
     return Scaffold(

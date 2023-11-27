@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/Login',
+      initialRoute: '/login',
       routes: {
-        '/Login': (context) => const LoginPage(title: 'Connection page'),
+        '/login': (context) => const LoginPage(title: 'Connection page'),
       },
     );
   }

@@ -8,7 +8,7 @@ class Machine {
   late bool _isRunning;
   late int _timeInactivity;
 
-  Machine(String name, int id, averageMinuteProductionGoal) {
+  Machine(String name, int id, int averageMinuteProductionGoal) {
     _name = name;
     _id = id;
     _averageMinuteProductionGoal = averageMinuteProductionGoal;

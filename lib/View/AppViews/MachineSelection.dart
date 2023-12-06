@@ -36,7 +36,8 @@ class _MachineSelection extends State<MachineSelection> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const FormMachine(title: "Deploy new machine")));
+              builder: (context) =>
+                  const FormMachine(title: "Deploy new machine")));
     }
 
     return Scaffold(

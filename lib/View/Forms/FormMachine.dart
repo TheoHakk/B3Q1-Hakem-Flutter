@@ -8,8 +8,6 @@ class FormMachine extends StatefulWidget {
 
   final String title;
 
-
-
   @override
   State<FormMachine> createState() => _FormMachine();
 }

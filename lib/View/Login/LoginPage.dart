@@ -19,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     credential = Credential();
-
   }
 
   void setUsername(String username) {
@@ -50,8 +49,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +60,10 @@ class _LoginPageState extends State<LoginPage> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                Color.fromRGBO(87, 185, 246, 1.0),
-                Color.fromRGBO(23, 134, 195, 1.0),
-                Color.fromRGBO(0, 77, 123, 1.0),
+                Color(0xFFADE8F4),
+                Color(0xFF90E0EF),
+                Color(0xFF48CAE4),
+                Color(0xFF00B4D8),
               ],
             ),
           ),
@@ -116,8 +114,16 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
             ),
-            ElevatedButton(
-                onPressed: validConnection, child: const Text("Connecting"))
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                    onPressed: validConnection,
+                    child: const Text("Connecting"))),
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                    onPressed: validConnection,
+                    child: const Text("Observer mode"))),
           ],
         ),
       ),

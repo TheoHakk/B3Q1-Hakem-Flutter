@@ -22,8 +22,8 @@ class _Statistics extends State<Statistics> {
     return (Column(children: [
       Column(textDirection: TextDirection.ltr, children: [
         const Text("Statistics", style: TextStyle(fontSize: 25)),
-        Text(
-            "Machine name: ${machine.getName()}", style: TextStyle(fontSize: 20)),
+        Text("Machine name: ${machine.getName()}",
+            style: const TextStyle(fontSize: 20)),
         Text(
             "Average daily production: ${machine.getAverageDailyProduction()} /minute",
             style: const TextStyle(fontSize: 20)),

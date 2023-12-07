@@ -72,63 +72,66 @@ class ChartState extends State<Chart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.66,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
+        aspectRatio: 2.5,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: LayoutBuilder(builder: (context, constraints) {
             final barsSpace = 4.0 * constraints.maxWidth / 40;
             final barsWidth = 8.0 * constraints.maxWidth / 200;
-            return BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.center,
-                barTouchData: BarTouchData(
-                  enabled: false,
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 28,
-                      getTitlesWidget: bottomTitles,
+
+            return SizedBox(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    barTouchData: BarTouchData(
+                      enabled: false,
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 28,
+                          getTitlesWidget: bottomTitles,
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          getTitlesWidget: leftTitles,
+                        ),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    groupsSpace: barsSpace,
+                    barGroups: getData(barsWidth, barsSpace, data),
+                    extraLinesData: ExtraLinesData(
+                      horizontalLines: [
+                        HorizontalLine(
+                          y: 15,
+                          color: Colors.red,
+                          strokeWidth: 2,
+                          dashArray: [10, 5],
+                        ),
+                      ],
                     ),
                   ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      getTitlesWidget: leftTitles,
-                    ),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                groupsSpace: barsSpace,
-                barGroups: getData(barsWidth, barsSpace, data),
-                extraLinesData: ExtraLinesData(
-                  horizontalLines: [
-                    HorizontalLine(
-                      y: 15,
-                      color: Colors.red,
-                      strokeWidth: 2,
-                      dashArray: [10, 5],
-                    ),
-                  ],
                 ),
               ),
             );
-          },
-        ),
-      ),
-    );
+          }),
+        ));
   }
 
   List<BarChartGroupData> getData(

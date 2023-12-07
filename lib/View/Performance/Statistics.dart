@@ -35,8 +35,6 @@ class _Statistics extends State<Statistics> {
             style: const TextStyle(fontSize: 20)),
         Text("Start hour: ${machine.getStartHour()}",
             style: const TextStyle(fontSize: 20)),
-        Text("Is running: ${machine.isRunning()}",
-            style: const TextStyle(fontSize: 20)),
         Text("Time inactivity: since ${machine.getTimeInactivity()} minute(s)",
             style: const TextStyle(fontSize: 20)),
       ]),

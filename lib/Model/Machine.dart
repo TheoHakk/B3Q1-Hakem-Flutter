@@ -24,21 +24,13 @@ class Machine {
   }
 
   getAverageDailyProduction() {
-    //SELECT AVG(NbUnits)
-    // FROM Main
-    // WHERE MachineID = ${_id}
+
     return _averageDailyProduction;
   }
 
   getAverageHourProduction() {
     int actualHour = DateTime.now().hour;
     //TODO calculate average hour production
-    //For this, I will do a SQL query to get
-    //the average production of the last hour
-    //SELECT AVG(NbUnits)
-    // FROM Main
-    // WHERE MachineID = ${_id}
-    // AND Hour = actualHour
     return _averageHourProduction;
   }
 
@@ -48,22 +40,12 @@ class Machine {
 
   getStartHour() {
     //TODO calculate start hour
-    //For this, I will do a SQL query to get
-    //the start hour of the machine
-    // SELECT (Hour, Minute)
-    // FROM Main
-    // WHERE MachineID = ${_id}
-    // ORDER BY Hour, Minute ASC
-    // LIMIT 1
     return _startHour;
   }
 
   getTimeInactivity() {
+    //Différence entre l'heure actuelle et l'heure du dernier passage de paquet positif
     return _timeInactivity;
-  }
-
-  isRunning() {
-    return _isRunning;
   }
 
   getId() {

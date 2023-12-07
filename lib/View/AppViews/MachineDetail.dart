@@ -9,23 +9,22 @@ import '../Performance/Statistics.dart';
 
 enum Views { textual, performance, chart, all }
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MachineDetail extends StatefulWidget {
+  const MachineDetail({Key? key}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => _MainScreen();
+  State<MachineDetail> createState() => _MachineDetail();
 }
 
-class _MainScreen extends State<MainScreen> {
-  Machine machine = Machine("Machine Schaeffer 1", 1, 1);
+class _MachineDetail extends State<MachineDetail> {
 
   Views selectedView = Views.textual;
 
   void updateMachine() {
-    Navigator.push(
+    Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-            builder: (context) => const FormMachine(title: "Update machine")));
+        '/update'
+        );
   }
 
   void setView(Views view) {
@@ -36,6 +35,7 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Machine machine = (ModalRoute.of(context)?.settings.arguments as Machine?)!;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Machine detail"),

@@ -1,6 +1,10 @@
 import 'package:b3q1_hakem_projet_flutter/View/AppViews/MachineSelection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../Blocs/auth/auth_bloc.dart';
+import '../../Blocs/auth/auth_events.dart';
+import '../../Blocs/auth/auth_state.dart';
 import '../../Model/Credential.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,15 +41,10 @@ class _LoginPageState extends State<LoginPage> {
     // if (credential.getUsername() == "" || credential.getPassword() == "") {
     //   return;
     // }
-    Navigator.pushReplacement(
+    Navigator.pushReplacementNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) =>
-            const MachineSelection(title: "Machine selection"),
-        settings: RouteSettings(
-          arguments: credential,
-        ),
-      ),
+      '/machineSelection',
+      arguments: credential
     );
   }
 
@@ -75,10 +74,16 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Text(
               'Connection to your account',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineMedium,
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2,
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
                 decoration: const InputDecoration(
@@ -96,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2,
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
                 decoration: const InputDecoration(
@@ -118,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: ElevatedButton(
                     onPressed: validConnection,
-                    child: const Text("Connecting"))),
+                    child: const Text("Login"))),
             Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: ElevatedButton(
@@ -128,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       floatingActionButton: TextButton(
-        onPressed: () => {
+        onPressed: () =>
+        {
           launch(
               "mailto:theohakem@gmail.com?subject=Oubli &body=J'ai oublié mon mot de passe !")
         },

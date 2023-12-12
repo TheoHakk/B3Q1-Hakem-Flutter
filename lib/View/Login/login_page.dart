@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Connection to your account',
                   style: Theme.of(context).textTheme.headline6,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                         Navigator.pushReplacementNamed(
                           context,
-                          "/machineSelection",
+                          '/machineSelection',
                           arguments: user,
                         );
                       } catch (e) {
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: const Text("Login"),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     User user = User(

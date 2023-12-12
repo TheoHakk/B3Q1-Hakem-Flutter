@@ -24,7 +24,7 @@ class _GroupedInformations extends State<GroupedInformations> {
         return SingleChildScrollView(
           child: Column(children: <Widget>[
             Statistics(title: "title", machine: awesomeMachine),
-            Performance(title: "Perf"),
+            const Performance(title: "Perf"),
             SizedBox(width: constraints.maxWidth, child: Chart())
           ]),
         );
@@ -37,7 +37,7 @@ class _GroupedInformations extends State<GroupedInformations> {
             Statistics(title: "title", machine: awesomeMachine),
             Column(
               children: [
-                Performance(title: "Perf"),
+                const Performance(title: "Perf"),
                 SizedBox(width: constraints.maxWidth / 2, child: Chart())
               ],
             )

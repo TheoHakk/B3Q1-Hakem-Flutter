@@ -10,7 +10,8 @@ import '../Performance/statistics.dart';
 enum Views { textual, performance, chart, all }
 
 class MachineDetail extends StatefulWidget {
-  const MachineDetail({super.key});
+  const MachineDetail({super.key, required this.machineId});
+  final String? machineId;
 
   @override
   State<MachineDetail> createState() => _MachineDetail();
@@ -35,10 +36,12 @@ class _MachineDetail extends State<MachineDetail> {
 
   @override
   Widget build(BuildContext context) {
-    Machine machine = (ModalRoute.of(context)?.settings.arguments as Machine?)!;
+
+    Machine machine = Machine("name", 8, 8);
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Machine detail"),
+          title: Text("Machine detail + ${widget.machineId}"),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(

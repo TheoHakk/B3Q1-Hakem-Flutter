@@ -1,12 +1,13 @@
-import 'package:b3q1_hakem_projet_flutter/Firebase/Repositories/user_repository.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Forms/form_machine.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import '../Firebase/Configuration/firebase_options.dart';
 import '../Firebase/Repositories/firebase_user_repository.dart';
+import '../Firebase/Repositories/user_repository.dart';
 import '../View/AppViews/machine_detail.dart';
 import '../View/AppViews/machine_selection.dart';
+import '../View/AppViews/not_found.dart';
+import '../View/Forms/form_machine.dart';
 import '../View/Login/login_page.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../Firebase/Configuration/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +35,41 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
-      routes: {
-        '/login': (context) => LoginPage(userRepository: userRepository),
-        '/machineSelection': (context) =>
-            MachineSelection(userRepository: userRepository),
-        '/machineDetail': (context) => const MachineDetail(),
-        '/update': (context) => const FormMachine(title: "update"),
-        '/add': (context) => const FormMachine(title: "add"),
+      onGenerateRoute: (settings) {
+        //Extract id from the path
+        var path = settings.name?.split('/');
+        String? id = (path!.length > 2) ? path[2] : null;
+
+        switch (path[1]) {
+          case 'login':
+            return MaterialPageRoute(
+              //we add the settings to the route, for actualize the url in the browser
+                settings: settings,
+                builder: (context) =>
+                    LoginPage(userRepository: userRepository));
+          case 'machineSelection':
+            return MaterialPageRoute(
+                settings: settings,
+                builder: (context) =>
+                    MachineSelection(userRepository: userRepository));
+          case 'machineDetail':
+            return MaterialPageRoute(
+                settings: settings,
+                builder: (context) => MachineDetail(machineId: id));
+          case 'update':
+            return MaterialPageRoute(
+                settings: settings,
+                builder: (context) =>
+                    FormMachine(title: "update", machineId: id));
+          case 'add':
+            return MaterialPageRoute(
+                settings: settings,
+                builder: (context) => FormMachine(title: "add", machineId: id));
+          default:
+            return MaterialPageRoute(
+                settings: settings,
+                builder: (context) => const NotFoundPage());
+        }
       },
     );
   }

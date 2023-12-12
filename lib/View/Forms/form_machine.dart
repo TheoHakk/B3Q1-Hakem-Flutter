@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import '../../Model/machine.dart';
 
 class FormMachine extends StatefulWidget {
-  const FormMachine({super.key, required this.title});
+  const FormMachine({super.key, required this.title, required this.machineId});
 
   final String title;
+  final String? machineId;
 
   @override
   State<FormMachine> createState() => _FormMachine();

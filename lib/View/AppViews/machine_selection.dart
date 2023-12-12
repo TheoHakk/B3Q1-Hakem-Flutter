@@ -31,7 +31,6 @@ class _MachineSelection extends State<MachineSelection> {
 
   @override
   Widget build(BuildContext context) {
-
     if (username == "") {
       currentUser = User(name: 'Visitor', logged: false);
     } else {
@@ -44,13 +43,9 @@ class _MachineSelection extends State<MachineSelection> {
       Machine("Machine Schaeffer 3", 3, 1),
     ];
 
-    void addMachine() {
-      Navigator.pushNamed(context, '/add');
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("${"Machine selection"} - ${currentUser.name}"),
+        title: Text("Machine selection - ${currentUser.name}"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -62,6 +57,32 @@ class _MachineSelection extends State<MachineSelection> {
               ],
             ),
           ),
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    Color(0xFF00B4D8),
+                    Color(0xFF48CAE4),
+                    Color(0xFF90E0EF),
+                    Color(0xFFADE8F4),
+                  ],
+                ),
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Center(
@@ -80,15 +101,7 @@ class _MachineSelection extends State<MachineSelection> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MachineDetail(),
-                            settings: RouteSettings(
-                              arguments: machine,
-                            ),
-                          ),
-                        );
+                        Navigator.pushNamed(context, '/machineDetail/${machine.getId()}');
                       },
                       child: Text(machine.getName()),
                     ),
@@ -99,11 +112,6 @@ class _MachineSelection extends State<MachineSelection> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            addMachine();
-          },
-          child: const Icon(Icons.add)),
     );
   }
 }

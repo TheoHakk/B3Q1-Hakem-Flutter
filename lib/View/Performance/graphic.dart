@@ -76,7 +76,6 @@ class ChartState extends State<Chart> {
           child: LayoutBuilder(builder: (context, constraints) {
             final barsSpace = 4.0 * constraints.maxWidth / 40;
             final barsWidth = 8.0 * constraints.maxWidth / 200;
-
             return SizedBox(
               child: Padding(
                 padding: const EdgeInsets.all(16),

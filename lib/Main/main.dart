@@ -6,7 +6,7 @@ import '../View/AppViews/MachineDetail.dart';
 import '../View/AppViews/MachineSelection.dart';
 import '../View/Login/LoginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../Firebase/firebase_options.dart';
+import '../Firebase/Configuration/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

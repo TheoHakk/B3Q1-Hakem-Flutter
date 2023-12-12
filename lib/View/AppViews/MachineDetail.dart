@@ -10,7 +10,7 @@ import '../Performance/Statistics.dart';
 enum Views { textual, performance, chart, all }
 
 class MachineDetail extends StatefulWidget {
-  const MachineDetail({Key? key}) : super(key: key);
+  const MachineDetail({super.key});
 
   @override
   State<MachineDetail> createState() => _MachineDetail();

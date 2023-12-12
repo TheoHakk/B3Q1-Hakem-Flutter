@@ -1,8 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../Model/Machine.dart';
-
 class Chart extends StatefulWidget {
   Chart({super.key});
 

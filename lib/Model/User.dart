@@ -1,25 +1,9 @@
-import 'dart:ffi';
-
 class User {
-  late String _name;
-  late Bool _isLogged;
-  late Bool _isAdmin;
+  String name;
+  bool logged;
 
-  User(String name, Bool isLogged, Bool isAdmin) {
-    _name = name;
-    _isLogged = isLogged;
-    _isAdmin = isAdmin;
-  }
-
-  String getName() {
-    return _name;
-  }
-
-  Bool getIsLogged() {
-    return _isLogged;
-  }
-
-  Bool getIsAdmin() {
-    return _isAdmin;
-  }
+  User({
+    required this.name,
+    required this.logged,
+  });
 }

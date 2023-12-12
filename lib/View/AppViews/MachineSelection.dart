@@ -1,8 +1,7 @@
 import 'package:b3q1_hakem_projet_flutter/View/AppViews/MachineDetail.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Forms/FormMachine.dart';
 import 'package:flutter/material.dart';
-import '../../Model/Credential.dart';
 import '../../Model/Machine.dart';
+import '../../Model/User.dart';
 
 class MachineSelection extends StatefulWidget {
   const MachineSelection({super.key, required this.title});
@@ -14,7 +13,7 @@ class MachineSelection extends StatefulWidget {
 }
 
 class _MachineSelection extends State<MachineSelection> {
-  late Credential credential;
+  late User currentUser;
 
   late List<Machine> machines;
 
@@ -25,7 +24,12 @@ class _MachineSelection extends State<MachineSelection> {
 
   @override
   Widget build(BuildContext context) {
-    credential = (ModalRoute.of(context)?.settings.arguments as Credential?)!;
+    final User? userFromArgs = ModalRoute.of(context)?.settings.arguments as User?;
+    if(userFromArgs != null) {
+      currentUser = userFromArgs;
+    } else {
+      currentUser = User(name: 'Théo', logged: true);
+    }
     machines = [
       Machine("Machine Schaeffer 1", 1, 1),
       Machine("Machine Schaeffer 2", 2, 1),
@@ -41,7 +45,7 @@ class _MachineSelection extends State<MachineSelection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.title} - ${credential.getUsername()}"),
+        title: Text("${widget.title} - ${currentUser.name}"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

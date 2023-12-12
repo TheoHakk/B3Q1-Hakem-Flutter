@@ -1,58 +1,28 @@
-import 'package:b3q1_hakem_projet_flutter/View/AppViews/MachineSelection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../Blocs/auth/auth_bloc.dart';
-import '../../Blocs/auth/auth_events.dart';
-import '../../Blocs/auth/auth_state.dart';
-import '../../Model/Credential.dart';
+
+import '../../Firebase/Repositories/user_repository.dart';
+import '../../Model/User.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.title});
+  final UserRepository userRepository;
 
-  final String title;
+  const LoginPage({Key? key, required this.userRepository}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late Credential credential;
-
-  @override
-  void initState() {
-    super.initState();
-    credential = Credential();
-  }
-
-  void setUsername(String username) {
-    setState(() {
-      credential.setUsername(username);
-    });
-  }
-
-  void setPassword(String password) {
-    setState(() {
-      credential.setPassword(password);
-    });
-  }
-
-  void validConnection() {
-    // if (credential.getUsername() == "" || credential.getPassword() == "") {
-    //   return;
-    // }
-    Navigator.pushReplacementNamed(
-      context,
-      '/machineSelection',
-      arguments: credential
-    );
-  }
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text("Connection page"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -69,80 +39,116 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Connection to your account',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headlineMedium,
-            ),
-            Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width / 2,
-              padding: const EdgeInsets.all(10.0),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "Username",
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Connection to your account',
+                  style: Theme.of(context).textTheme.headline6,
                 ),
-                onChanged: (String? value) {
-                  setUsername(value!);
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width / 2,
-              padding: const EdgeInsets.all(10.0),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "Password",
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    hintText: "Username",
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
                 ),
-                obscureText: true,
-                onChanged: (String? value) {
-                  setPassword(value!);
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    hintText: "Password",
+                  ),
+                  obscureText: true,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        await widget.userRepository.signIn(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        User user = User(
+                          name: _emailController.text,
+                          logged: true,
+                        );
+                        Navigator.pushReplacementNamed(
+                          context,
+                          "/machineSelection",
+                          arguments: user,
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text("Login"),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    User user = User(
+                      name: "Visitor",
+                      logged: false,
+                    );
+                    Navigator.pushReplacementNamed(
+                      context,
+                      "/machineSelection",
+                      arguments: user,
+                    );
+                  },
+                  child: const Text("Observer mode"),
+                ),
+              ],
             ),
-            Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                    onPressed: validConnection,
-                    child: const Text("Login"))),
-            Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                    onPressed: validConnection,
-                    child: const Text("Observer mode"))),
-          ],
+          ),
         ),
       ),
       floatingActionButton: TextButton(
-        onPressed: () =>
-        {
-          launch(
-              "mailto:theohakem@gmail.com?subject=Oubli &body=J'ai oublié mon mot de passe !")
+        onPressed: () async {
+          try {
+            await widget.userRepository.resetPassword(
+              _emailController.text,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Changing password request sent to your mail"),
+              ),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.toString == "Exception: Error"
+                    ? "Please enter a valid mail address"
+                    : e.toString()),
+              ),
+            );
+          }
         },
         child: const Text('Forgot password ?'),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

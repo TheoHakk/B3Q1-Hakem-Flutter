@@ -19,20 +19,31 @@ class _GroupedInformations extends State<GroupedInformations> {
 
   @override
   build(BuildContext context) {
-    return  Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Statistics(title: "title", machine: awesomeMachine)],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Performance(title:"title"), Chart()],
-          ),
-        ],
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth < 700) {
+        return SingleChildScrollView(
+          child: Column(children: <Widget>[
+            Statistics(title: "title", machine: awesomeMachine),
+            Performance(title: "Perf"),
+            SizedBox(width: constraints.maxWidth, child: Chart())
+          ]),
+        );
+      }
+      return SingleChildScrollView(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Statistics(title: "title", machine: awesomeMachine),
+            Column(
+              children: [
+                Performance(title: "Perf"),
+                SizedBox(width: constraints.maxWidth / 2, child: Chart())
+              ],
+            )
+          ],
+        ),
+      );
+    });
   }
 }

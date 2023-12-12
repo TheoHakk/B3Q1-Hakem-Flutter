@@ -1,9 +1,9 @@
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Graphic.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Statistics.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/graphic.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/performance.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/statistics.dart';
 import 'package:flutter/material.dart';
 
-import '../../Model/Machine.dart';
+import '../../Model/machine.dart';
 
 class GroupedInformations extends StatefulWidget {
   const GroupedInformations({super.key, required this.title});

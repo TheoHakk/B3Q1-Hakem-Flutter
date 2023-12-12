@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../Firebase/Repositories/user_repository.dart';
-import '../../Model/User.dart';
+import '../../Model/user.dart';
 
 class LoginPage extends StatefulWidget {
   final UserRepository userRepository;
-
-  const LoginPage({Key? key, required this.userRepository}) : super(key: key);
+  const LoginPage({super.key, required this.userRepository});
 
   @override
   State<LoginPage> createState() => _LoginPageState();

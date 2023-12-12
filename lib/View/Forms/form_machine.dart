@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Model/Machine.dart';
+import '../../Model/machine.dart';
 
 class FormMachine extends StatefulWidget {
   const FormMachine({super.key, required this.title});

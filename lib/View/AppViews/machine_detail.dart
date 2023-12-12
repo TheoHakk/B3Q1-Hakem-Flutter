@@ -1,11 +1,11 @@
-import 'package:b3q1_hakem_projet_flutter/Model/Machine.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Forms/FormMachine.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Graphic.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/GroupedInformations.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance.dart';
+import 'package:b3q1_hakem_projet_flutter/Model/machine.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Forms/form_machine.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/graphic.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/grouped_informations.dart';
+import 'package:b3q1_hakem_projet_flutter/View/Performance/performance.dart';
 import 'package:flutter/material.dart';
 
-import '../Performance/Statistics.dart';
+import '../Performance/statistics.dart';
 
 enum Views { textual, performance, chart, all }
 

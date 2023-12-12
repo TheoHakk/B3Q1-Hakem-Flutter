@@ -1,12 +1,13 @@
-import 'package:b3q1_hakem_projet_flutter/View/AppViews/MachineDetail.dart';
+import 'package:b3q1_hakem_projet_flutter/Firebase/Repositories/user_repository.dart';
+import 'package:b3q1_hakem_projet_flutter/View/AppViews/machine_detail.dart';
 import 'package:flutter/material.dart';
-import '../../Model/Machine.dart';
-import '../../Model/User.dart';
+import '../../Model/machine.dart';
+import '../../Model/user.dart';
 
 class MachineSelection extends StatefulWidget {
-  const MachineSelection({super.key, required this.title});
+  final UserRepository userRepository;
 
-  final String title;
+  const MachineSelection({super.key, required this.userRepository});
 
   @override
   State<MachineSelection> createState() => _MachineSelection();
@@ -15,21 +16,28 @@ class MachineSelection extends StatefulWidget {
 class _MachineSelection extends State<MachineSelection> {
   late User currentUser;
 
+  late String username;
   late List<Machine> machines;
 
   @override
   void initState() {
     super.initState();
+    widget.userRepository.getUser().then((value) {
+      setState(() {
+        username = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final User? userFromArgs = ModalRoute.of(context)?.settings.arguments as User?;
-    if(userFromArgs != null) {
-      currentUser = userFromArgs;
+
+    if (username == "") {
+      currentUser = User(name: 'Visitor', logged: false);
     } else {
-      currentUser = User(name: 'Théo', logged: true);
+      currentUser = User(name: username, logged: true);
     }
+
     machines = [
       Machine("Machine Schaeffer 1", 1, 1),
       Machine("Machine Schaeffer 2", 2, 1),
@@ -37,15 +45,12 @@ class _MachineSelection extends State<MachineSelection> {
     ];
 
     void addMachine() {
-      Navigator.pushNamed(
-          context,
-          '/add'
-          );
+      Navigator.pushNamed(context, '/add');
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.title} - ${currentUser.name}"),
+        title: Text("${"Machine selection"} - ${currentUser.name}"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

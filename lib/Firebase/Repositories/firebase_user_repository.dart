@@ -31,4 +31,12 @@ class FirebaseUserRepository implements UserRepository {
       throw Exception(e.message);
     }
   }
+
+  @override
+  Future<String> getUser() {
+    if (_firebaseAuth.currentUser == null) {
+      return Future.value("");
+    }
+    return Future.value(_firebaseAuth.currentUser!.email);
+  }
 }

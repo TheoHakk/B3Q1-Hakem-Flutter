@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../Model/Machine.dart';
+import '../../Model/machine.dart';
 
 class Statistics extends StatefulWidget {
   final Machine machine;

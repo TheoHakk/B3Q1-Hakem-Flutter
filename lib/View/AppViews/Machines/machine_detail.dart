@@ -14,9 +14,9 @@ enum Views { textual, performance, chart, all }
 class MachineDetail extends StatefulWidget {
   final String? machineId;
   final UserRepository userRepository;
+
   const MachineDetail(
       {super.key, required this.machineId, required this.userRepository});
-
 
   @override
   State<MachineDetail> createState() => _MachineDetail();
@@ -72,7 +72,7 @@ class _MachineDetail extends State<MachineDetail> {
         future: _loadUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Machine machine = Machine("name", 8, 8);
+            Machine machine = Machine(8, "name", 8, 60000);
             return Scaffold(
                 appBar: AppBar(
                   title: Text("Machine detail + ${widget.machineId}"),

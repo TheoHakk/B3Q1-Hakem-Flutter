@@ -15,7 +15,7 @@ class GroupedInformations extends StatefulWidget {
 }
 
 class _GroupedInformations extends State<GroupedInformations> {
-  Machine awesomeMachine = Machine("name", 8, 8);
+  Machine awesomeMachine = Machine(8, "name", 8, 60000);
 
   @override
   build(BuildContext context) {

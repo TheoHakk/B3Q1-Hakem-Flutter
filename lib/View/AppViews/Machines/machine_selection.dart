@@ -55,9 +55,9 @@ class _MachineSelection extends State<MachineSelection> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             machines = [
-              Machine("Machine Schaeffer 1", 1, 1),
-              Machine("Machine Schaeffer 2", 2, 1),
-              Machine("Machine Schaeffer 3", 3, 1),
+              Machine(1, "Machine Schaeffer 1", 15, 60000),
+              Machine(2, "Machine Schaeffer 2", 15, 60000),
+              Machine(3, "Machine Schaeffer 3", 15, 60000),
             ];
 
             return Scaffold(
@@ -150,9 +150,9 @@ class _MachineSelection extends State<MachineSelection> {
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pushNamed(context,
-                                    '/machineDetail/${machine.getId()}');
+                                    '/machineDetail/${machine.id}');
                               },
-                              child: Text(machine.getName()),
+                              child: Text(machine.name),
                             ),
                           ),
                         const SizedBox(height: 30),

@@ -1,25 +1,83 @@
-import 'package:flutter/cupertino.dart';
-import '../../Model/Machine/machine.dart';
+import 'package:equatable/equatable.dart';
 
-@immutable
-abstract class MachineEvent {}
+abstract class MachinesEvent extends Equatable {
+  const MachinesEvent();
 
-class LoadMachines extends MachineEvent {}
-
-class AddMachine extends MachineEvent {
-  final Machine machine;
-
-  AddMachine(this.machine);
+  @override
+  List<Object> get props => [];
 }
 
-class UpdateMachine extends MachineEvent {
-  final Machine machine;
+class FetchMachinesEvent extends MachinesEvent {}
 
-  UpdateMachine(this.machine);
-}
-
-class DeleteMachine extends MachineEvent {
+class FetchAverageOfDayEvent extends MachinesEvent {
   final String machineId;
 
-  DeleteMachine(this.machineId);
+  const FetchAverageOfDayEvent(this.machineId);
+
+  @override
+  List<Object> get props => [machineId];
+}
+
+class FetchAverageOfHourEvent extends MachinesEvent {
+  final String machineId;
+  final String hour;
+
+  const FetchAverageOfHourEvent(this.machineId, this.hour);
+
+  @override
+  List<Object> get props => [machineId, hour];
+}
+
+class FetchStartHourEvent extends MachinesEvent {
+  final String machineId;
+
+  const FetchStartHourEvent(this.machineId);
+
+  @override
+  List<Object> get props => [machineId];
+}
+
+class FetchLastHourProductionEvent extends MachinesEvent {}
+
+class FetchLastUnitsEvent extends MachinesEvent {
+  final String machineId;
+
+  const FetchLastUnitsEvent(this.machineId);
+
+  @override
+  List<Object> get props => [machineId];
+}
+
+class FetchLastUnitEvent extends MachinesEvent {
+  final String machineId;
+
+  const FetchLastUnitEvent(this.machineId);
+
+  @override
+  List<Object> get props => [machineId];
+}
+
+class FetchAllUnitsEvent extends MachinesEvent {
+  final String machineId;
+
+  const FetchAllUnitsEvent(this.machineId);
+
+  @override
+  List<Object> get props => [machineId];
+}
+
+class FlushProductionDataEvent extends MachinesEvent {}
+
+class FetchAllMachinesEvent extends MachinesEvent {}
+
+class AddNewMachineEvent extends MachinesEvent {
+  final String machineId;
+  final String sendingTime;
+  final String machineName;
+  final String machineGoal;
+
+  const AddNewMachineEvent(this.machineId, this.sendingTime, this.machineName, this.machineGoal);
+
+  @override
+  List<Object> get props => [machineId, sendingTime, machineName, machineGoal];
 }

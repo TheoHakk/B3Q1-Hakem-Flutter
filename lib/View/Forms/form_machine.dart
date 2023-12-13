@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../Model/machine.dart';
 
 class FormMachine extends StatefulWidget {
   const FormMachine({super.key, required this.title, required this.machineId});
@@ -17,6 +14,7 @@ class _FormMachine extends State<FormMachine> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
+  final TextEditingController _dataDelayController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +45,26 @@ class _FormMachine extends State<FormMachine> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a production goal';
+                  } else if (int.parse(value) < 0) {
+                    return 'Please enter a positive number';
+                  } else if (!RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _dataDelayController,
+                decoration: const InputDecoration(
+                    labelText: 'Time before sending data'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a production goal';
+                  } else if (int.parse(value) < 0) {
+                    return 'Please enter a positive number';
+                  } else if (!RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                    return 'Please enter a valid number';
                   }
                   return null;
                 },
@@ -59,7 +77,7 @@ class _FormMachine extends State<FormMachine> {
                     print('Production Goal: ${_goalController.text}');
                   }
                 },
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),

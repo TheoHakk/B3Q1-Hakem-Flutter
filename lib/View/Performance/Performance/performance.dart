@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-import '../../Model/machine.dart';
+import '../../../Model/Machine/machine.dart';
 
 class Performance extends StatefulWidget {
   const Performance({super.key, required this.title});

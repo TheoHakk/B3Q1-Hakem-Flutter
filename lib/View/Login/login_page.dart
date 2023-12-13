@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../Firebase/Repositories/user_repository.dart';
-import '../../Model/user.dart';
 
 class LoginPage extends StatefulWidget {
   final UserRepository userRepository;
+
   const LoginPage({super.key, required this.userRepository});
 
   @override
@@ -78,19 +78,27 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Connection ..."),
+                        ),
+                      );
                       try {
                         await widget.userRepository.signIn(
                           _emailController.text,
                           _passwordController.text,
                         );
-                        User user = User(
-                          name: _emailController.text,
-                          logged: true,
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Successfully logged in"),
+                          ),
                         );
-                        Navigator.pushReplacementNamed(
+                        //We use this method to remove the login page from the stack and use a route to go to the machine selection page
+                        Navigator.pushNamedAndRemoveUntil(
                           context,
-                          '/machineSelection',
-                          arguments: user,
+                          "/machineSelection",
+                          (route) => false,
                         );
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -106,14 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    User user = User(
-                      name: "Visitor",
-                      logged: false,
-                    );
-                    Navigator.pushReplacementNamed(
+                    //We use this method to remove the login page from the stack and use a route to go to the machine selection page
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
                       "/machineSelection",
-                      arguments: user,
+                      (route) => false,
                     );
                   },
                   child: const Text("Observer mode"),
@@ -128,11 +133,6 @@ class _LoginPageState extends State<LoginPage> {
           try {
             await widget.userRepository.resetPassword(
               _emailController.text,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Changing password request sent to your mail"),
-              ),
             );
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(

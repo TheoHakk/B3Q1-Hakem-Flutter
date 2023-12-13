@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../Firebase/Configuration/firebase_options.dart';
 import '../Firebase/Repositories/firebase_user_repository.dart';
 import '../Firebase/Repositories/user_repository.dart';
-import '../View/AppViews/machine_detail.dart';
-import '../View/AppViews/machine_selection.dart';
-import '../View/AppViews/not_found.dart';
+import '../View/AppViews/Machines/machine_detail.dart';
+import '../View/AppViews/Machines/machine_selection.dart';
+import '../View/AppViews/Error/not_found.dart';
 import '../View/Forms/form_machine.dart';
 import '../View/Login/login_page.dart';
 
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           case 'machineDetail':
             return MaterialPageRoute(
                 settings: settings,
-                builder: (context) => MachineDetail(machineId: id));
+                builder: (context) => MachineDetail(machineId: id, userRepository: userRepository));
           case 'update':
             return MaterialPageRoute(
                 settings: settings,

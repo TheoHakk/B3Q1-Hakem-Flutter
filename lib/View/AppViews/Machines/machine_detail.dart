@@ -134,6 +134,13 @@ class _MachineDetail extends State<MachineDetail> {
                                     },
                                   ),
                                   ListTile(
+                                    leading: const Icon(Icons.edit),
+                                    title: const Text('Update a machine'),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/update');
+                                    },
+                                  ),
+                                  ListTile(
                                     leading: const Icon(Icons.add),
                                     title: const Text('Add a machine'),
                                     onTap: () {

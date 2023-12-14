@@ -37,6 +37,9 @@ class _FormMachine extends State<FormMachine> {
                   }
                   return null;
                 },
+                onFieldSubmitted: (value) {
+                  validateForm();
+                } ,
               ),
               TextFormField(
                 controller: _goalController,
@@ -45,38 +48,36 @@ class _FormMachine extends State<FormMachine> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a production goal';
-                  } else if (int.parse(value) < 0) {
-                    return 'Please enter a positive number';
-                  } else if (!RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
                     return 'Please enter a valid number';
                   }
                   return null;
                 },
+                onFieldSubmitted: (value) {
+                  validateForm();
+                } ,
               ),
               TextFormField(
                 controller: _dataDelayController,
                 decoration: const InputDecoration(
-                    labelText: 'Time before sending data'),
+                    labelText: 'Time before sending data in second'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter a production goal';
-                  } else if (int.parse(value) < 0) {
-                    return 'Please enter a positive number';
-                  } else if (!RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                    return 'Please enter a delay for the data';
+                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
                     return 'Please enter a valid number';
                   }
                   return null;
                 },
+                onFieldSubmitted: (value) {
+                  value *= 1000;
+                  validateForm();
+                } ,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    print('Machine Name: ${_nameController.text}');
-                    print('Production Goal: ${_goalController.text}');
-                  }
-                },
+                onPressed: () {validateForm;},
                 child: const Text('Submit'),
               ),
             ],
@@ -84,5 +85,13 @@ class _FormMachine extends State<FormMachine> {
         ),
       ),
     );
+  }
+
+  validateForm() {
+    if (_formKey.currentState!.validate()) {
+      print('Machine Name: ${_nameController.text}');
+      print('Production Goal: ${_goalController.text}');
+      print('Data Delay: ${_dataDelayController.text}');
+    }
   }
 }

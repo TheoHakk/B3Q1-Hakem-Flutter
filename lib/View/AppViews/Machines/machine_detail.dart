@@ -75,7 +75,7 @@ class _MachineDetail extends State<MachineDetail> {
             Machine machine = Machine(8, "name", 8, 60000);
             return Scaffold(
                 appBar: AppBar(
-                  title: Text("Machine detail + ${widget.machineId}"),
+                  title: Text("Machine detail for id : ${widget.machineId}"),
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -178,17 +178,21 @@ class _MachineDetail extends State<MachineDetail> {
                   ),
                 ),
                 body: Center(
-                  child: Column(
-                    children: [
-                      if (selectedView == Views.textual)
-                        Statistics(title: "Statistics", machine: machine),
-                      if (selectedView == Views.performance)
-                        const Performance(title: "Les perfs ! "),
-                      if (selectedView == Views.chart) Chart(),
-                      if (selectedView == Views.all)
-                        const GroupedInformations(title: "Ceci est un titre"),
-                      const SizedBox(height: 30),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (selectedView == Views.textual)
+                          Statistics(title: "Statistics", machine: machine),
+                        if (selectedView == Views.performance)
+                          const Performance(title: "Les perfs ! "),
+                        if (selectedView == Views.chart) Chart(),
+                        if (selectedView == Views.all)
+                          const GroupedInformations(title: "Ceci est un titre"),
+                        const SizedBox(height: 30),
+                      ],
+                    ),
                   ),
                 ),
                 bottomNavigationBar: BottomAppBar(

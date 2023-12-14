@@ -13,15 +13,17 @@ class Performance extends StatefulWidget {
 }
 
 class _Performance extends State<Performance> {
-  late Machine machine;
-
   @override
   build(BuildContext context) {
     return _buildRadialTextPointer();
   }
 
-  /// Returns the text pointer gauge
   SfRadialGauge _buildRadialTextPointer() {
+    const double objectif = 10.0;
+    const double actual = 15.0;
+
+    const double actualPointerValue = (actual / objectif) * 60;
+
     return SfRadialGauge(
       axes: <RadialAxis>[
         RadialAxis(
@@ -37,33 +39,20 @@ class _Performance extends State<Performance> {
               NeedlePointer(
                   needleEndWidth: 5,
                   needleLength: 0.7,
-                  value: 82,
+                  value: actualPointerValue,
                   knobStyle: KnobStyle(knobRadius: 0)),
             ],
             ranges: <GaugeRange>[
+              //ça va de 0 à 120
               GaugeRange(
                   startValue: 0,
-                  endValue: 20,
+                  endValue: 40,
                   startWidth: 0.45,
                   endWidth: 0.45,
                   sizeUnit: GaugeSizeUnit.factor,
                   color: const Color(0xFFDD3800)),
               GaugeRange(
-                  startValue: 20.5,
-                  endValue: 40,
-                  startWidth: 0.45,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  endWidth: 0.45,
-                  color: const Color(0xFFFF4100)),
-              GaugeRange(
                   startValue: 40.5,
-                  endValue: 60,
-                  startWidth: 0.45,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  endWidth: 0.45,
-                  color: const Color(0xFFFFBA00)),
-              GaugeRange(
-                  startValue: 60.5,
                   endValue: 80,
                   startWidth: 0.45,
                   sizeUnit: GaugeSizeUnit.factor,
@@ -71,13 +60,6 @@ class _Performance extends State<Performance> {
                   color: const Color(0xFFFFDF10)),
               GaugeRange(
                   startValue: 80.5,
-                  endValue: 100,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  startWidth: 0.45,
-                  endWidth: 0.45,
-                  color: const Color(0xFF8BE724)),
-              GaugeRange(
-                  startValue: 100.5,
                   endValue: 120,
                   startWidth: 0.45,
                   endWidth: 0.45,
@@ -96,29 +78,26 @@ class _Performance extends State<Performance> {
           pointers: const <GaugePointer>[
             MarkerPointer(
                 markerType: MarkerType.text,
-                text: 'Poor',
+                text: 'Insuffisant',
                 value: 20.5,
                 textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Times'),
+                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
                 offsetUnit: GaugeSizeUnit.factor,
                 markerOffset: -0.12),
             MarkerPointer(
                 markerType: MarkerType.text,
-                text: 'Average',
+                text: 'Dans la moyenne',
                 value: 60.5,
                 textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Times'),
+                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
                 offsetUnit: GaugeSizeUnit.factor,
                 markerOffset: -0.12),
             MarkerPointer(
                 markerType: MarkerType.text,
-                text: 'Good',
+                text: 'Bon !!',
                 value: 100.5,
                 textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Times'),
+                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
                 offsetUnit: GaugeSizeUnit.factor,
                 markerOffset: -0.12)
           ],

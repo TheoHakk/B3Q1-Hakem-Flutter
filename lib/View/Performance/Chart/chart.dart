@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 class Chart extends StatefulWidget {
   Chart({super.key});
 
-  final Color dark = Colors.white10;
-  final Color normal = Colors.lightBlueAccent;
-  final Color light = Colors.cyanAccent;
+  final Color dark = Colors.redAccent;
+  final Color light = Colors.greenAccent;
 
   @override
   State<StatefulWidget> createState() => ChartState();
@@ -28,6 +27,8 @@ class Data {
 }
 
 class ChartState extends State<Chart> {
+  int objectif = 10;
+
   List<Data> data = [
     Data("00:00", 5),
     Data("01:00", 14),
@@ -36,15 +37,20 @@ class ChartState extends State<Chart> {
     Data("04:00", 20),
     Data("05:00", 15),
     Data("06:00", 6),
-    Data("07:00", 2),
+    Data("07:00", 25),
     Data("08:00", 3),
-    Data("09:00", 8),
+    Data("09:00", 18),
     Data("10:00", 15),
   ];
 
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
-    String text = value.toInt().toString();
+    String text;
+    if (value.toInt() < data.length) {
+      text = data[value.toInt()].getHour();
+    } else {
+      text = '';
+    }
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(text, style: style),
@@ -116,8 +122,8 @@ class ChartState extends State<Chart> {
                     extraLinesData: ExtraLinesData(
                       horizontalLines: [
                         HorizontalLine(
-                          y: 15,
-                          color: Colors.red,
+                          y: objectif as double,
+                          color: Colors.blueAccent,
                           strokeWidth: 2,
                           dashArray: [10, 5],
                         ),
@@ -143,9 +149,8 @@ class ChartState extends State<Chart> {
             BarChartRodData(
               toY: data[i].getValue().toDouble(),
               rodStackItems: [
-                BarChartRodStackItem(0, 20, widget.dark),
-                BarChartRodStackItem(20, 12, widget.normal),
-                BarChartRodStackItem(12, 5, widget.light),
+                BarChartRodStackItem(0, objectif as double, widget.dark),
+                BarChartRodStackItem(objectif as double, 50000.0, widget.light),
               ],
               borderRadius: BorderRadius.zero,
               width: barsWidth,

@@ -16,25 +16,29 @@ class _Statistics extends State<Statistics> {
   late Machine machine;
 
   _Statistics(this.machine);
-
   @override
   build(BuildContext context) {
-    return (Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text("Statistics", style: TextStyle(fontSize: 25)),
-          Text("Machine name: ${machine.name}",
-              style: const TextStyle(fontSize: 20)),
-          Text("Average daily production: JENAIPAS /minute",
-              style: const TextStyle(fontSize: 20)),
-          Text("Average hour production: JENAIPAS /minute",
-              style: const TextStyle(fontSize: 20)),
-          Text("Average minute production goal: JENAIPAS",
-              style: const TextStyle(fontSize: 20)),
-          Text("Start hour: JENAIPAS", style: const TextStyle(fontSize: 20)),
-          Text("Time inactivity: since JENAIPAS minute(s)",
-              style: const TextStyle(fontSize: 20)),
-        ]));
+    return const Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Statistics", style: TextStyle(fontSize: 25)),
+            Text("Machine name: SIEMENSE B7878",
+                style: TextStyle(fontSize: 20)),
+            Text("Average daily production: 13.27 /minute",
+                style: TextStyle(fontSize: 20)),
+            Text("Average hour production: 15 /minute",
+                style: TextStyle(fontSize: 20)),
+            Text("Average minute production goal: 10",
+                style: TextStyle(fontSize: 20)),
+            Text("Start hour: 00:00", style: TextStyle(fontSize: 20)),
+            Text("Time inactivity: actif",
+                style: TextStyle(fontSize: 20)),
+          ],
+        ),
+      ),
+    );
   }
 }

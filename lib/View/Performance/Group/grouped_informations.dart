@@ -13,7 +13,6 @@ class GroupedInformations extends StatefulWidget {
   @override
   State<GroupedInformations> createState() => _GroupedInformations();
 }
-
 class _GroupedInformations extends State<GroupedInformations> {
   Machine awesomeMachine = Machine(8, "name", 8, 60000);
 
@@ -22,20 +21,24 @@ class _GroupedInformations extends State<GroupedInformations> {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 700) {
         return SingleChildScrollView(
-          child: Column(children: <Widget>[
-            Statistics(title: "title", machine: awesomeMachine),
-            const Performance(title: "Perf"),
-            SizedBox(width: constraints.maxWidth, child: Chart())
-          ]),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Add this
+            children: <Widget>[
+              Statistics(title: "title", machine: awesomeMachine),
+              const Performance(title: "Perf"),
+              SizedBox(width: constraints.maxWidth, child: Chart())
+            ],
+          ),
         );
       }
-      return SingleChildScrollView(
+      return Center(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Statistics(title: "title", machine: awesomeMachine),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Add this
               children: [
                 const Performance(title: "Perf"),
                 SizedBox(width: constraints.maxWidth / 2, child: Chart())

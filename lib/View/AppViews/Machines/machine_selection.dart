@@ -103,7 +103,7 @@ class _MachineSelection extends State<MachineSelection> {
                       !currentUser.logged
                           ? ListTile(
                               leading: const Icon(Icons.login),
-                              title: const Text('Connection'),
+                              title: const Text('Log in'),
                               onTap: () {
                                 Navigator.pushNamedAndRemoveUntil(
                                     context, '/login', (route) => false);
@@ -113,7 +113,7 @@ class _MachineSelection extends State<MachineSelection> {
                               children: [
                                 ListTile(
                                   leading: const Icon(Icons.logout),
-                                  title: const Text('Disconnection'),
+                                  title: const Text('Log out'),
                                   onTap: () {
                                     widget.userRepository.signOut();
                                     Navigator.pushNamedAndRemoveUntil(

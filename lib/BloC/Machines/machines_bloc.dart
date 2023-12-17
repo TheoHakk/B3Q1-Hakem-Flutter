@@ -7,17 +7,16 @@ import 'machines_state.dart';
 class MachinesBloc extends Bloc<MachinesEvent, MachinesState> {
   final Api api = Api();
 
-  MachinesBloc() : super(MachinesInitialState());
-
-  Stream<MachinesState> mapEventToState(MachinesEvent event) async* {
-    if (event is FetchMachinesEvent) {
+  MachinesBloc() : super(MachinesInitialState()) {
+   on<FetchMachinesEvent>((event, emit) async {
+      emit(MachinesLoadingState());
       try {
         List<Machine> machines = (await api.fetchAllMachines()).cast<Machine>();
-        yield MachinesLoadedState(machines.cast<Machine>());
+        emit(MachinesLoadedState(machines.cast<Machine>()));
       } catch (e) {
-        yield MachinesErrorState();
+        emit(MachinesErrorState());
       }
-    }
+    });
   }
 }
 

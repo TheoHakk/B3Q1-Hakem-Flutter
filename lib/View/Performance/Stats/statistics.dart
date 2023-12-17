@@ -25,7 +25,7 @@ class _Statistics extends State<Statistics> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("Statistics", style: TextStyle(fontSize: 25)),
-            Text("Machine name: SIEMENSE B7878",
+            Text("Machine name: Schaefer 1",
                 style: TextStyle(fontSize: 20)),
             Text("Average daily production: 13.27 /minute",
                 style: TextStyle(fontSize: 20)),

@@ -1,50 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../Machine/machine.dart';
+
 class Api {
   final String baseUrl = 'http://10.0.70.50:3002';
-  Future<List<Map<String, dynamic>>> fetchAverageOfDay(String machineId) async {
-    final response = await http.get(Uri.parse('$baseUrl/AverageOfDay?machineId=$machineId'));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load average of day');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> fetchAverageOfHour(String machineId, String hour) async {
-    final response = await http.get(Uri.parse('$baseUrl/AverageOfHour?machineId=$machineId&hour=$hour'));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load average of hour');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> fetchStartHour(String machineId) async {
-    final response = await http.get(Uri.parse('$baseUrl/StartHour?machineId=$machineId'));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load start hour');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> fetchLastHourProduction() async {
-    final response = await http.get(Uri.parse('$baseUrl/LastHourProduction'));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load last hour production');
-    }
-  }
 
   Future<List<Map<String, dynamic>>> fetchLastUnits(String machineId) async {
-    final response = await http.get(Uri.parse('$baseUrl/LastUnits?machineId=$machineId'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/LastUnits?machineId=$machineId'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -54,7 +18,8 @@ class Api {
   }
 
   Future<List<Map<String, dynamic>>> fetchLastUnit(String machineId) async {
-    final response = await http.get(Uri.parse('$baseUrl/LastUnit?machineId=$machineId'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/LastUnit?machineId=$machineId'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -64,7 +29,8 @@ class Api {
   }
 
   Future<List<Map<String, dynamic>>> fetchAllUnits(String machineId) async {
-    final response = await http.get(Uri.parse('$baseUrl/AllUnits?machineId=$machineId'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/AllUnits?machineId=$machineId'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -81,19 +47,21 @@ class Api {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchAllMachines() async {
+  Future<List<Machine>> fetchAllMachines() async {
     final response = await http.get(Uri.parse('$baseUrl/AllMachines'));
-
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((item) => Machine.fromJson(item)).toList();
     } else {
-      throw Exception('Failed to load all machines');
+      throw Exception('Failed to load machines');
     }
   }
 
-  Future<void> addNewMachine(String machineId, String sendingTime, String machineName, String machineGoal) async {
+  Future<void> addNewMachine(String machineId, String sendingTime,
+      String machineName, String machineGoal) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/NewMachine?machineId=$machineId&sendingTime=$sendingTime&machineName=$machineName&machineGoal=$machineGoal'),
+      Uri.parse(
+          '$baseUrl/NewMachine?machineId=$machineId&sendingTime=$sendingTime&machineName=$machineName&machineGoal=$machineGoal'),
     );
 
     if (response.statusCode != 200) {

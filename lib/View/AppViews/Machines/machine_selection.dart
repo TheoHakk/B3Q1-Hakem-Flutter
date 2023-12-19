@@ -1,5 +1,9 @@
 import 'package:b3q1_hakem_projet_flutter/Firebase/Repositories/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../BloC/Machines/machines_bloc.dart';
+import '../../../BloC/Machines/machines_event.dart';
+import '../../../BloC/Machines/machines_state.dart';
 import '../../../Model/Machine/machine.dart';
 import '../../../Model/User/user.dart';
 
@@ -13,13 +17,6 @@ class MachineSelection extends StatefulWidget {
 }
 
 class _MachineSelection extends State<MachineSelection> {
-  //Here we have a real bordel.
-  //Because of the way we have to load the data, we have to use a FutureBuilder
-  //to load the data, and then we have to use a setState to update the state
-  //of the widget. This is not the best way to do it, but it works.
-  //We have to do this because of the using of the async way to obtain the current user.
-  //So we have to use a FutureBuilder to load the data and then construct the widget.
-
   late final User currentUser;
 
   late String username;
@@ -29,6 +26,7 @@ class _MachineSelection extends State<MachineSelection> {
   void initState() {
     super.initState();
     _loadUserData();
+    BlocProvider.of<MachinesBloc>(context).add(LoadMachinesEvent());
   }
 
   bool isLoading = true;
@@ -55,9 +53,21 @@ class _MachineSelection extends State<MachineSelection> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             machines = [
-              Machine(1, "Machine Schaeffer 1", 15, 60000),
-              Machine(2, "Machine Schaeffer 2", 15, 60000),
-              Machine(3, "Machine Schaeffer 3", 15, 60000),
+              Machine(
+                  id: 1,
+                  productionGoal: 15,
+                  sendingTime: 60000,
+                  name: "Machine Schaeffer 1"),
+              Machine(
+                  id: 2,
+                  productionGoal: 15,
+                  sendingTime: 60000,
+                  name: "Machine Schaeffer 2"),
+              Machine(
+                  id: 3,
+                  productionGoal: 15,
+                  sendingTime: 60000,
+                  name: "Machine Schaeffer 3"),
             ];
 
             return Scaffold(
@@ -133,30 +143,51 @@ class _MachineSelection extends State<MachineSelection> {
                   ],
                 ),
               ),
+
+              //Construct a bloc builder with the machinesBloc and machinesState
+              //to load the machines
+
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text(
-                      'Select a machine',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 30),
-                    Column(
-                      children: [
-                        for (Machine machine in machines)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context,
-                                    '/machineDetail/${machine.id}');
+                    BlocBuilder<MachinesBloc, MachinesState>(
+                      builder: (context, state) {
+                        if (state is MachinesInitialState) {
+                          return const Text('Initial State');
+                        } else if (state is MachinesLoadingState) {
+                          return const CircularProgressIndicator();
+                        } else if (state is MachinesLoadedState) {
+                          return Expanded(
+                            child: ListView.builder(
+                              itemCount: state.machines.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  margin: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    title: Text(
+                                      state.machines[index].name,
+                                      style: const TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          '/machineDetail/${state.machines[index].id}');
+                                    },
+                                  ),
+                                );
                               },
-                              child: Text(machine.name),
                             ),
-                          ),
-                        const SizedBox(height: 30),
-                      ],
+                          );
+                        } else if (state is MachinesErrorState) {
+                          return Text(
+                              'Une erreur est survenue: ${state.error}');
+                        } else {
+                          return const Text('Une erreur est survenue');
+                        }
+                      },
                     ),
                   ],
                 ),

@@ -23,13 +23,6 @@ class MachineDetail extends StatefulWidget {
 }
 
 class _MachineDetail extends State<MachineDetail> {
-  //Here we have a real bordel.
-  //Because of the way we have to load the data, we have to use a FutureBuilder
-  //to load the data, and then we have to use a setState to update the state
-  //of the widget. This is not the best way to do it, but it works.
-  //We have to do this because of the using of the async way to obtain the current user.
-  //So we have to use a FutureBuilder to load the data and then construct the widget.
-
   Views selectedView = Views.textual;
 
   late final User currentUser;
@@ -72,7 +65,7 @@ class _MachineDetail extends State<MachineDetail> {
         future: _loadUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Machine machine = Machine(8, "name", 8, 60000);
+            Machine machine = Machine(id: 1, productionGoal: 15, sendingTime: 60000, name: "Machine Schaeffer 1");
             return Scaffold(
                 appBar: AppBar(
                   title: Text("Machine detail for id : ${widget.machineId}"),

@@ -1,25 +1,24 @@
 class Machine {
   final int id;
+  final int productionGoal;
+  final int sendingTime;
   final String name;
-  final int goal;
-  final int delaySendingData;
 
-  Machine(this.id, this.name, this.goal, this.delaySendingData);
-
+  Machine({required this.id, required this.productionGoal, required this.sendingTime, required this.name});
 
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
-      json['id'],
-      json['name'],
-      json['goal'],
-      json['delaySendingData'],
+      id: json['Id'],
+      productionGoal: json['ProductionGoal'],
+      sendingTime: json['SendingTime'],
+      name: json['Name'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'goal': goal,
-    'delaySendingData': delaySendingData,
+    'Id': id,
+    'Name': name,
+    'ProductionGoal': productionGoal,
+    'SendingTime': sendingTime,
   };
 }

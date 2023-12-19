@@ -8,15 +8,28 @@ class MachinesBloc extends Bloc<MachinesEvent, MachinesState> {
   final Api api = Api();
 
   MachinesBloc() : super(MachinesInitialState()) {
-   on<FetchMachinesEvent>((event, emit) async {
+    on<FetchMachinesEvent>((event, emit) async {
       emit(MachinesLoadingState());
       try {
-        List<Machine> machines = (await api.fetchAllMachines()).cast<Machine>();
-        emit(MachinesLoadedState(machines.cast<Machine>()));
+        final List<Machine> machines =
+            (await api.fetchAllMachines()).cast<Machine>();
+        emit(MachinesLoadedState(machines));
       } catch (e) {
-        emit(MachinesErrorState());
+        print(e);
+        emit(MachinesErrorState(e.toString()));
+      }
+    });
+
+    on<LoadMachinesEvent>((event, emit) async {
+      emit(MachinesLoadingState());
+      try {
+        final List<Machine> machines =
+        (await api.fetchAllMachines()).cast<Machine>();
+        emit(MachinesLoadedState(machines));
+      } catch (e) {
+        print(e);
+        emit(MachinesErrorState(e.toString()));
       }
     });
   }
 }
-

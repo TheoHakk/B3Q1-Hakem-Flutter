@@ -21,4 +21,8 @@ class MachinesLoadedState extends MachinesState {
   List<Object> get props => [machines];
 }
 
-class MachinesErrorState extends MachinesState {}
+class MachinesErrorState extends MachinesState {
+  final String error;
+
+  const MachinesErrorState(this.error);
+}

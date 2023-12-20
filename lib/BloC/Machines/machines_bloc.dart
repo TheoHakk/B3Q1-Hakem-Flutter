@@ -15,7 +15,6 @@ class MachinesBloc extends Bloc<MachinesEvent, MachinesState> {
             (await api.fetchAllMachines()).cast<Machine>();
         emit(MachinesLoadedState(machines));
       } catch (e) {
-        print(e);
         emit(MachinesErrorState(e.toString()));
       }
     });
@@ -27,7 +26,6 @@ class MachinesBloc extends Bloc<MachinesEvent, MachinesState> {
         (await api.fetchAllMachines()).cast<Machine>();
         emit(MachinesLoadedState(machines));
       } catch (e) {
-        print(e);
         emit(MachinesErrorState(e.toString()));
       }
     });

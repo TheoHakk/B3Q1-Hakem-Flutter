@@ -15,7 +15,17 @@ class Performance extends StatefulWidget {
 class _Performance extends State<Performance> {
   @override
   build(BuildContext context) {
-    return _buildRadialTextPointer();
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: _buildRadialTextPointer(),
+          ),
+        ],
+      ),
+    );
   }
 
   SfRadialGauge _buildRadialTextPointer() {

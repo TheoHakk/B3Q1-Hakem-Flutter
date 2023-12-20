@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
-class FormMachine extends StatefulWidget {
-  const FormMachine({super.key, required this.title, required this.machineId});
+import '../../Firebase/Repositories/user_repository.dart';
+import '../../Model/User/user.dart';
 
+class FormMachine extends StatefulWidget {
+  const FormMachine(
+      {super.key,
+      required this.title,
+      required this.machineId,
+      required this.userRepository});
+
+  final UserRepository userRepository;
   final String title;
   final String? machineId;
 
@@ -11,16 +19,44 @@ class FormMachine extends StatefulWidget {
 }
 
 class _FormMachine extends State<FormMachine> {
+  late final User currentUser;
+  late String username;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
   final TextEditingController _dataDelayController = TextEditingController();
 
+  bool isLoading = true;
+
+  Future<void> _loadUserData() async {
+    if (isLoading) {
+      String name = await widget.userRepository.getUser();
+      setState(() {
+        username = name;
+        isLoading = false;
+      });
+      if (username == "") {
+        // If the user is not logged in, we redirect him to the login page
+        // Because he can't access the form
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/login', (route) => false);
+      } else {
+        currentUser = User(name: username, logged: true);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('${widget.title} $username'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,7 +75,7 @@ class _FormMachine extends State<FormMachine> {
                 },
                 onFieldSubmitted: (value) {
                   validateForm();
-                } ,
+                },
               ),
               TextFormField(
                 controller: _goalController,
@@ -55,7 +91,7 @@ class _FormMachine extends State<FormMachine> {
                 },
                 onFieldSubmitted: (value) {
                   validateForm();
-                } ,
+                },
               ),
               TextFormField(
                 controller: _dataDelayController,
@@ -73,11 +109,13 @@ class _FormMachine extends State<FormMachine> {
                 onFieldSubmitted: (value) {
                   value *= 1000;
                   validateForm();
-                } ,
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {validateForm;},
+                onPressed: () {
+                  validateForm;
+                },
                 child: const Text('Submit'),
               ),
             ],

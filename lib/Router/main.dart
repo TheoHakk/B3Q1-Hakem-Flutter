@@ -68,12 +68,12 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) =>
-                      FormMachine(title: "update", machineId: id));
+                      FormMachine(title: "update", machineId: id, userRepository: userRepository));
             case 'add':
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) =>
-                      FormMachine(title: "add", machineId: id));
+                      FormMachine(title: "add", machineId: id, userRepository: userRepository));
             default:
               return MaterialPageRoute(
                   settings: settings,

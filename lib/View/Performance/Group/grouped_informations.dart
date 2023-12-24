@@ -1,6 +1,5 @@
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Chart/chart.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performance.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Performance/Stats/statistics.dart';
 import 'package:flutter/material.dart';
 import '../../../Model/Machine/machine.dart';
 
@@ -24,12 +23,12 @@ class _GroupedInformations extends State<GroupedInformations> {
   build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 700) {
+      if (constraints.maxWidth < 750) {
         return SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Statistics(title: "title", machine: awesomeMachine),
+              // Statistics(title: "title", machine: awesomeMachine),
               Container(
                 height: screenHeight * 0.4,
                 child: const Performance(title: "Perf"),
@@ -47,7 +46,7 @@ class _GroupedInformations extends State<GroupedInformations> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Statistics(title: "title", machine: awesomeMachine),
+            // Statistics(title: "title", machine: awesomeMachine),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

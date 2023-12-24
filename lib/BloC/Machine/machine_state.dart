@@ -20,4 +20,8 @@ class MachineLoadedState extends MachineState {
   List<Object> get props => [machine];
 }
 
-class MachineErrorState extends MachineState {}
+class MachineErrorState extends MachineState {
+  final String error;
+
+  const MachineErrorState(this.error);
+}

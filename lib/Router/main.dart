@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) => MachineDetail(
-                      machineId: id, userRepository: userRepository));
+                      machineId: id.toString(), userRepository: userRepository));
             case 'update':
               return MaterialPageRoute(
                   settings: settings,

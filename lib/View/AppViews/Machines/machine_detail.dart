@@ -1,5 +1,4 @@
 import 'package:b3q1_hakem_projet_flutter/Model/Machine/machine.dart';
-import 'package:b3q1_hakem_projet_flutter/View/Forms/form_machine.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Chart/chart.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Group/grouped_informations.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performance.dart';
@@ -12,7 +11,7 @@ import '../../Performance/Stats/statistics.dart';
 enum Views { textual, performance, chart, all }
 
 class MachineDetail extends StatefulWidget {
-  final String? machineId;
+  final String machineId;
   final UserRepository userRepository;
 
   const MachineDetail(
@@ -43,7 +42,7 @@ class _MachineDetail extends State<MachineDetail> {
       String name = await widget.userRepository.getUser();
       setState(() {
         username = name;
-        isLoading = false; // Set loading to false after data is loaded
+        isLoading = false;
       });
       if (username == "") {
         currentUser = User(name: 'Visitor', logged: false);
@@ -65,7 +64,11 @@ class _MachineDetail extends State<MachineDetail> {
         future: _loadUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Machine machine = Machine(id: 1, productionGoal: 15, sendingTime: 60000, name: "Machine Schaeffer 1");
+            Machine machine = Machine(
+                id: 1,
+                productionGoal: 15,
+                sendingTime: 60000,
+                name: "Machine Schaeffer 1");
             return Scaffold(
                 appBar: AppBar(
                   title: Text("Machine detail for id : ${widget.machineId}"),
@@ -147,7 +150,8 @@ class _MachineDetail extends State<MachineDetail> {
                                       AlertDialog alert = AlertDialog(
                                         title: const Text("Delete machine"),
                                         content: const Text(
-                                            "Are you sure you want to delete this machine?"),
+                                            "Are you sure you want to delete this machine?"
+                                        ),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -184,7 +188,7 @@ class _MachineDetail extends State<MachineDetail> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (selectedView == Views.textual)
-                          Statistics(title: "Statistics", machine: machine),
+                          Statistics(title: "Statistics", id: widget.machineId),
                         if (selectedView == Views.performance)
                           const Performance(title: "Les perfs ! "),
                         if (selectedView == Views.chart) Chart(),

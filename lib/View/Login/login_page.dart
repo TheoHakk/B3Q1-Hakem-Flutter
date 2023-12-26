@@ -1,10 +1,12 @@
+import 'package:b3q1_hakem_projet_flutter/BloC/User/user_bloc.dart';
 import 'package:flutter/material.dart';
-import '../../Firebase/Repositories/user_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../BloC/User/user_event.dart';
+import '../../BloC/User/user_state.dart';
 
 class LoginPage extends StatefulWidget {
-  final UserRepository userRepository;
-
-  const LoginPage({Key? key, required this.userRepository}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,139 +16,100 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool hasNavigate = false;
+
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      BlocProvider.of<UserBloc>(context).add(
+        UserLoginEvent(
+          _emailController.text,
+          _passwordController.text,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Connection to your account',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  //set width to 50% of the screen
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      hintText: "Username",
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (_) {
-                      _login();
-                    },
+    return BlocListener<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserLoadedState && state.user.logged && !hasNavigate) {
+          hasNavigate = true;
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/machineSelection',
+            (route) => false,
+          );
+        } else if (state is UserErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Connection to your account',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                    //set width to 50% of the screen
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: TextFormField(
-                      controller: _passwordController,
-                      decoration: const InputDecoration(
-                        hintText: "Password",
-                      ),
-                      obscureText: true,
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (_) {
-                        _login();
-                      },
-                    )),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text("Login"),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    //We use this method to remove the login page from the stack and use a route to go to the machine selection page
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      "/machineSelection",
-                      (route) => false,
-                    );
-                  },
-                  child: const Text("Observer mode"),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  _buildTextField(_emailController, 'Username'),
+                  const SizedBox(height: 20),
+                  _buildTextField(_passwordController, 'Password',
+                      obscureText: true),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _login,
+                    child: const Text("Login"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        "/machineSelection",
+                        (route) => false,
+                      );
+                    },
+                    child: const Text("Observer mode"),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButton: TextButton(
-        onPressed: () async {
-          try {
-            await widget.userRepository.resetPassword(
-              _emailController.text,
+        floatingActionButton: TextButton(
+          onPressed: () {
+            BlocProvider.of<UserBloc>(context).add(
+              UserResetPasswordEvent(_emailController.text),
             );
-          } catch (e) {
-            //
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(e.toString == "Exception: Error"
-                    ? "Please enter a valid mail address"
-                    : e.toString()),
-              ),
-            );
-          }
-        },
-        child: const Text('Forgot password ?'),
+          },
+          child: const Text('Forgot password ?'),
+        ),
       ),
     );
   }
 
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Connection ..."),
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      {bool obscureText = false}) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.5,
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
         ),
-      );
-      try {
-        await widget.userRepository.signIn(
-          _emailController.text,
-          _passwordController.text,
-        );
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Successfully logged in"),
-          ),
-        );
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          "/machineSelection",
-          (route) => false,
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
-      }
-    }
+        obscureText: obscureText,
+        validator: (value) => value!.isEmpty ? 'Please enter some text' : null,
+        onFieldSubmitted: (_) => _login(),
+      ),
+    );
   }
 }

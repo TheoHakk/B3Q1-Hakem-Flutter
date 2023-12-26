@@ -3,6 +3,7 @@ import 'package:b3q1_hakem_projet_flutter/BloC/Machines/machines_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../BloC/User/user_bloc.dart';
 import '../Firebase/Configuration/firebase_options.dart';
 import '../Firebase/Repositories/firebase_user_repository.dart';
 import '../Firebase/Repositories/user_repository.dart';
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<MachinesBloc>(create: (context) => MachinesBloc()),
         BlocProvider<MachineBloc>(create: (context) => MachineBloc()),
+        BlocProvider<UserBloc>(
+            create: (context) => UserBloc(userRepository: userRepository)),
       ],
       child: MaterialApp(
         title: 'Performance counter',
@@ -53,27 +56,27 @@ class MyApp extends StatelessWidget {
                   //we add the settings to the route, for actualize the url in the browser
                   settings: settings,
                   builder: (context) =>
-                      LoginPage(userRepository: userRepository));
+                      const LoginPage());
             case 'machineSelection':
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) =>
-                      MachineSelection(userRepository: userRepository));
+                      const MachineSelection());
             case 'machineDetail':
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) => MachineDetail(
-                      machineId: id.toString(), userRepository: userRepository));
+                      machineId: id.toString()));
             case 'update':
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) =>
-                      FormMachine(title: "update", machineId: id, userRepository: userRepository));
+                      FormMachine(title: "update", machineId: id));
             case 'add':
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) =>
-                      FormMachine(title: "add", machineId: id, userRepository: userRepository));
+                      FormMachine(title: "add", machineId: id));
             default:
               return MaterialPageRoute(
                   settings: settings,

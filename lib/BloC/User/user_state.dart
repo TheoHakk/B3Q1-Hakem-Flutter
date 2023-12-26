@@ -11,3 +11,10 @@ class UserLoadedState extends UserState {
 
   UserLoadedState(this.user);
 }
+
+class UserErrorState extends UserState {
+  final String message;
+
+  UserErrorState(this.message);
+}
+

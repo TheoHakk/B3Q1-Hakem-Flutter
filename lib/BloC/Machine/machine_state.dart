@@ -21,7 +21,7 @@ class MachineLoadedState extends MachineState {
 }
 
 class MachineErrorState extends MachineState {
-  final String error;
+  final String message;
 
-  const MachineErrorState(this.error);
+  const MachineErrorState(this.message);
 }

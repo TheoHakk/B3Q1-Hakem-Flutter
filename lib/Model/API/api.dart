@@ -32,14 +32,6 @@ class Api {
     }
   }
 
-  Future<void> flushProductionData() async {
-    final response = await http.delete(Uri.parse('$baseUrl/Flush'));
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to flush production data');
-    }
-  }
-
   Future<List<Machine>> fetchMachines() async {
     final response = await http.get(Uri.parse('$baseUrl/AllMachines'));
     if (response.statusCode == 200) {
@@ -58,18 +50,6 @@ class Api {
       return Machine.fromJson(json.decode(response.body)[0]);
     } else {
       throw Exception('Failed to load machine');
-    }
-  }
-
-  Future<void> addNewMachine(String machineId, String sendingTime,
-      String machineName, String machineGoal) async {
-    final response = await http.post(
-      Uri.parse(
-          '$baseUrl/NewMachine?machineId=$machineId&sendingTime=$sendingTime&machineName=$machineName&machineGoal=$machineGoal'),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to add new machine');
     }
   }
 }

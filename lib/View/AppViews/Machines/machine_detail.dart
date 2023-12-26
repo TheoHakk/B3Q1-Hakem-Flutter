@@ -64,11 +64,6 @@ class _MachineDetail extends State<MachineDetail> {
         future: _loadUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Machine machine = Machine(
-                id: 1,
-                productionGoal: 15,
-                sendingTime: 60000,
-                name: "Machine Schaeffer 1");
             return Scaffold(
                 appBar: AppBar(
                   title: Text("Machine detail for id : ${widget.machineId}"),

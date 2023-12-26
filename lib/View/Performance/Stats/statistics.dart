@@ -17,21 +17,19 @@ class Statistics extends StatefulWidget {
 
 class _Statistics extends State<Statistics> {
   Timer? _timer;
-  late int duration;
+  int duration = 20;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
-    //Refresh informations all 20 seconds
-    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
-    });
+    startTimer();
   }
 
-  void setDuration(int dur){
-    setState(() {
-      duration = dur;
+  void startTimer() {
+    //Interruption of the actual timer, and creation of a new one
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
+      BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
     });
   }
 
@@ -43,6 +41,13 @@ class _Statistics extends State<Statistics> {
 
   @override
   build(BuildContext context) {
+    void setDuration(int sendingTime) {
+      int newDuration = (sendingTime / 1000) as int;
+      if (newDuration != duration) {
+        duration = newDuration;
+        startTimer();
+      }
+    }
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -57,25 +62,25 @@ class _Statistics extends State<Statistics> {
                   setDuration(state.machine.sendingTime);
                   return Column(
                     children: [
-                      Text("Statistics", style: TextStyle(fontSize: 25)),
+                      const Text("Statistics", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                       Text("Machine id: ${state.machine.id}",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text("Machine name: ${state.machine.name}",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text(
                           "Average minute production goal: ${state.machine.productionGoal}",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text(
                           "Average daily production: notImplemented /minute",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text(
                           "Average hour production: notImplemented/minute",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text("Start hour: notImplemented",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       Text(
                           "Time inactivity: notImplemented",
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                     ],
                   );
                 } else {

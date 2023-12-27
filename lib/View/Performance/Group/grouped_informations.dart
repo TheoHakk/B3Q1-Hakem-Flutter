@@ -14,12 +14,6 @@ class GroupedInformations extends StatefulWidget {
 }
 
 class _GroupedInformations extends State<GroupedInformations> {
-  final Machine awesomeMachine = Machine(
-      id: 1,
-      productionGoal: 15,
-      sendingTime: 60000,
-      name: "Machine Schaeffer 1");
-
   @override
   build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;

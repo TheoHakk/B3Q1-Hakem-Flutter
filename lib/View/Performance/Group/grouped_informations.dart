@@ -32,7 +32,7 @@ class _GroupedInformations extends State<GroupedInformations> {
               Statistics(id: widget.id),
               SizedBox(
                 height: screenHeight * 0.4,
-                child: const Performance(title: "Perf"),
+                child: Performance(id: widget.id),
               ),
               SizedBox(
                 height: screenHeight * 0.4,
@@ -54,7 +54,7 @@ class _GroupedInformations extends State<GroupedInformations> {
                 SizedBox(
                   width: constraints.maxWidth / 2,
                   height: screenHeight * 0.4,
-                  child: const Performance(title: "Perf"),
+                  child: Performance(id: widget.id),
                 ),
                 SizedBox(
                   height: screenHeight * 0.4,

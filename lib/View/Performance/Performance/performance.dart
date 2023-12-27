@@ -1,37 +1,113 @@
+import 'dart:async';
+
+import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../../../BloC/Machine/machine_bloc.dart';
+import '../../../BloC/Machine/machine_event.dart';
+import '../../../BloC/Machine/machine_state.dart';
+import '../../../BloC/Units/units_event.dart';
+import '../../../BloC/Units/units_state.dart';
+import '../../../Model/Machine/machine.dart';
+import '../../../Model/Unit/unit.dart';
 
 class Performance extends StatefulWidget {
-  const Performance({super.key, required this.title});
+  const Performance({super.key, required this.id});
 
-  final String title;
+  final String id;
 
   @override
   State<Performance> createState() => _Performance();
 }
 
 class _Performance extends State<Performance> {
+  late UnitsBloc _unitsBloc;
+  late MachineBloc _machineBloc;
+
+  Timer? _timer;
+  int duration = 10;
+
   @override
-  build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: _buildRadialTextPointer(),
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    _machineBloc = BlocProvider.of<MachineBloc>(context);
+    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    _unitsBloc.add(FetchLastUnit(widget.id));
+    _machineBloc.add(LoadMachineEvent(widget.id));
+    _startTimer();
   }
 
-  SfRadialGauge _buildRadialTextPointer() {
-    const double objectif = 10.0;
-    const double actual = 15.0;
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
-    const double actualPointerValue = (actual / objectif) * 60;
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
+      BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
+      _unitsBloc = BlocProvider.of<UnitsBloc>(context);
+      _unitsBloc.add(FetchLastUnit(widget.id));
+    });
+  }
+
+  void _updateTimerDuration(int sendingTime) {
+    int newDuration = (sendingTime / 1000).round();
+    if (newDuration != duration) {
+      duration = newDuration;
+      _startTimer();
+    }
+  }
+
+  @override
+  build(BuildContext context) {
+    return BlocBuilder<MachineBloc, MachineState>(
+        bloc: _machineBloc,
+        builder: (context, machineState) {
+          if (machineState is MachineLoadingState) {
+            return const CircularProgressIndicator();
+          } else if (machineState is MachineLoadedState) {
+            Machine machine = machineState.machine;
+            _updateTimerDuration(machine.sendingTime);
+            return BlocBuilder<UnitsBloc, UnitsState>(
+                bloc: _unitsBloc,
+                builder: (context, state) {
+                  if (state is LastUnitLoadingState) {
+                    print("loading");
+                    return const CircularProgressIndicator();
+                  } else if (state is LastUnitLoadedState) {
+                    Unit lastUnit = state.unit;
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: _buildRadialTextPointer(lastUnit, machine),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (state is LastUnitErrorState) {
+                    return const Text('Une erreur est survenue');
+                  } else {
+                    return const Text('Une erreur est survenue et non gérée');
+                  }
+                });
+          }
+          return const Text('Une erreur est survenue');
+        });
+  }
+
+  SfRadialGauge _buildRadialTextPointer(Unit unit, Machine machine) {
+    double objectif = machine.productionGoal as double;
+    double actual = unit.nbUnits as double;
+
+    double actualPointerValue = (actual / objectif) * 60;
 
     return SfRadialGauge(
       axes: <RadialAxis>[
@@ -44,12 +120,12 @@ class _Performance extends State<Performance> {
             maximum: 120,
             canScaleToFit: true,
             radiusFactor: 0.79,
-            pointers: const <GaugePointer>[
+            pointers: <GaugePointer>[
               NeedlePointer(
                   needleEndWidth: 5,
                   needleLength: 0.7,
                   value: actualPointerValue,
-                  knobStyle: KnobStyle(knobRadius: 0)),
+                  knobStyle: const KnobStyle(knobRadius: 0)),
             ],
             ranges: <GaugeRange>[
               //ça va de 0 à 120

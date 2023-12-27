@@ -1,4 +1,3 @@
-import 'package:b3q1_hakem_projet_flutter/Model/Machine/machine.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Chart/chart.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Group/grouped_informations.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performance.dart';
@@ -14,9 +13,9 @@ import '../../Performance/Stats/statistics.dart';
 enum Views { textual, performance, chart, all }
 
 class MachineDetail extends StatefulWidget {
-  final String machineId;
+  final String id;
 
-  const MachineDetail({super.key, required this.machineId});
+  const MachineDetail({super.key, required this.id});
 
   @override
   State<MachineDetail> createState() => _MachineDetail();
@@ -59,7 +58,7 @@ class _MachineDetail extends State<MachineDetail> {
           }
           return Scaffold(
             appBar: AppBar(
-              title: Text("Machine detail for id : ${widget.machineId}"),
+              title: Text("Machine detail for id : ${widget.id}"),
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -175,12 +174,12 @@ class _MachineDetail extends State<MachineDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     if (selectedView == Views.textual)
-                      Statistics(id: widget.machineId),
+                      Statistics(id: widget.id),
                     if (selectedView == Views.performance)
-                      const Performance(title: "Les perfs ! "),
+                      Performance(id: widget.id),
                     if (selectedView == Views.chart) Chart(),
                     if (selectedView == Views.all)
-                      GroupedInformations(id: widget.machineId),
+                      GroupedInformations(id: widget.id),
                     const SizedBox(height: 30),
                   ],
                 ),

@@ -22,9 +22,12 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     on<FetchLastUnit>((event, emit) async {
       emit(UnitsLoadingState());
       try {
-        final Unit unit = await api.fetchLastUnit(event.machineId);
+        print("fetching last unit");
+        Unit unit = await api.fetchLastUnit(event.machineId);
+        print("last unit fetched");
         emit(LastUnitLoadedState(unit));
       } catch (e) {
+        print(e.toString());
         emit(UnitsErrorState(e.toString()));
       }
     });

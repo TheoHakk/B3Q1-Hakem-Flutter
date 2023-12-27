@@ -17,7 +17,7 @@ class Statistics extends StatefulWidget {
 
 class _Statistics extends State<Statistics> {
   Timer? _timer;
-  int duration = 10;
+  int duration = 1;
 
   @override
   void initState() {
@@ -59,7 +59,6 @@ class _Statistics extends State<Statistics> {
                 } else {
                   return Text('Error not captured ${state.toString()}');
                 }
-
               },
             ),
           ],
@@ -79,14 +78,21 @@ class _Statistics extends State<Statistics> {
   Widget _buildStatisticsColumn(Machine machine) {
     return Column(
       children: [
-        const Text("Statistics", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        Text("Machine id: ${machine.id}", style: const TextStyle(fontSize: 20)),
-        Text("Machine name: ${machine.name}", style: const TextStyle(fontSize: 20)),
-        Text("Average minute production goal: ${machine.productionGoal}", style: const TextStyle(fontSize: 20)),
-        Text("Average daily production: notImplemented /minute", style: const TextStyle(fontSize: 20)),
-        Text("Average hour production: notImplemented/minute", style: const TextStyle(fontSize: 20)),
-        Text("Start hour: notImplemented", style: const TextStyle(fontSize: 20)),
-        Text("Time inactivity: notImplemented", style: const TextStyle(fontSize: 20)),
+        const Text("Statistics",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, decoration: TextDecoration.underline)),
+        Text("Machine identifier: ${machine.id}", style: const TextStyle(fontSize: 20)),
+        Text("Machine name: ${machine.name}",
+            style: const TextStyle(fontSize: 20)),
+        Text("Average minute production goal: ${machine.productionGoal}",
+            style: const TextStyle(fontSize: 20)),
+        Text("Average daily production: notImplemented /minute",
+            style: const TextStyle(fontSize: 20)),
+        Text("Average hour production: notImplemented/minute",
+            style: const TextStyle(fontSize: 20)),
+        Text("Start hour: notImplemented",
+            style: const TextStyle(fontSize: 20)),
+        Text("Time inactivity: notImplemented",
+            style: const TextStyle(fontSize: 20)),
       ],
     );
   }

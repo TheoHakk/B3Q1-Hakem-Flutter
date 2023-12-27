@@ -1,5 +1,6 @@
 import 'package:b3q1_hakem_projet_flutter/BloC/Machine/machine_bloc.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Machines/machines_bloc.dart';
+import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<MachinesBloc>(create: (context) => MachinesBloc()),
         BlocProvider<MachineBloc>(create: (context) => MachineBloc()),
+        BlocProvider<UnitsBloc>(create: (context) => UnitsBloc()),
         BlocProvider<UserBloc>(
             create: (context) => UserBloc(userRepository: userRepository)),
       ],
@@ -66,7 +68,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                   settings: settings,
                   builder: (context) => MachineDetail(
-                      machineId: id.toString()));
+                      id: id.toString()));
             case 'update':
               return MaterialPageRoute(
                   settings: settings,

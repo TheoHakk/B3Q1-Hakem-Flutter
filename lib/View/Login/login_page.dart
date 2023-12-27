@@ -9,10 +9,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPage();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPage extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

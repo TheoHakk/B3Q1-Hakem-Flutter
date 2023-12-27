@@ -21,7 +21,6 @@ class Api {
   }
 
   Future<Unit> fetchLastUnit(String machineId) async {
-    //Return a the last registerd unit
     final response =
         await http.get(Uri.parse('$baseUrl/LastUnit?machineId=$machineId'));
 
@@ -46,7 +45,6 @@ class Api {
     final response =
         await http.get(Uri.parse('$baseUrl/Machine?machineId=$id'));
     if (response.statusCode == 200) {
-      //[{"Id":1,"ProductionGoal":15,"SendingTime":30000,"Name":"Schaeffer"}]
       return Machine.fromJson(json.decode(response.body)[0]);
     } else {
       throw Exception('Failed to load machine');

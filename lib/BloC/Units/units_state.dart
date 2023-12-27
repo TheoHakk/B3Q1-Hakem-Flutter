@@ -1,6 +1,12 @@
+import 'package:equatable/equatable.dart';
 import '../../Model/Unit/unit.dart';
 
-abstract class UnitsState {}
+abstract class UnitsState extends Equatable {
+  const UnitsState();
+
+  @override
+  List<Object> get props => [];
+}
 
 class UnitsInitialState extends UnitsState {}
 

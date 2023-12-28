@@ -23,7 +23,6 @@ class Performance extends StatefulWidget {
 }
 
 class _Performance extends State<Performance> {
-  late String machineId;
   late UnitsBloc _unitsBloc;
   late MachineBloc _machineBloc;
 
@@ -38,14 +37,13 @@ class _Performance extends State<Performance> {
   @override
   void initState() {
     super.initState();
-    machineId = widget.machineId;
 
     _machineBloc = BlocProvider.of<MachineBloc>(context);
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
 
-    _unitsBloc.add(FetchLastUnit(machineId));
-    if (machineId != 'null') {
-      _machineBloc.add(LoadMachineEvent(machineId));
+    if (widget.machineId != 'null') {
+      _unitsBloc.add(FetchLastUnit(widget.machineId));
+      _machineBloc.add(LoadMachineEvent(widget.machineId));
     }
 
     _unitsBloc.stream.listen((state) {

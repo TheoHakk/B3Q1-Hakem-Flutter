@@ -14,7 +14,7 @@ class Chart extends StatefulWidget {
   final Color dark = Colors.redAccent;
   final Color light = Colors.greenAccent;
 
-  Chart({required this.machineId});
+  const Chart({super.key, required this.machineId});
 
   @override
   State<StatefulWidget> createState() => ChartState();

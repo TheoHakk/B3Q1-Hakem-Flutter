@@ -174,12 +174,12 @@ class _MachineDetail extends State<MachineDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     if (selectedView == Views.textual)
-                      Statistics(id: widget.id),
+                      Statistics(machineId: widget.id),
                     if (selectedView == Views.performance)
-                      Performance(id: widget.id),
-                    if (selectedView == Views.chart) Chart(),
+                      Performance(machineId: widget.id),
+                    if (selectedView == Views.chart) Chart(machineId: widget.id),
                     if (selectedView == Views.all)
-                      GroupedInformations(id: widget.id),
+                      GroupedInformations(machineId: widget.id),
                     const SizedBox(height: 30),
                   ],
                 ),

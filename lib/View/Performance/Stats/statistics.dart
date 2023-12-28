@@ -7,9 +7,9 @@ import '../../../BloC/Machine/machine_state.dart';
 import '../../../Model/Machine/machine.dart';
 
 class Statistics extends StatefulWidget {
-  final String id;
+  final String machineId;
 
-  const Statistics({super.key, required this.id});
+  const Statistics({super.key, required this.machineId});
 
   @override
   _Statistics createState() => _Statistics();
@@ -17,19 +17,26 @@ class Statistics extends StatefulWidget {
 
 class _Statistics extends State<Statistics> {
   Timer? _timer;
-  int duration = 1;
+  int duration = 10;
+  late MachineBloc _machineBloc;
+
+  final StreamController<Machine> _machineStreamController = StreamController.broadcast();
+
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
-    _startTimer();
-  }
+    _machineBloc = BlocProvider.of<MachineBloc>(context);
+    _machineBloc.add(LoadMachineEvent(widget.machineId));
 
-  void _startTimer() {
-    _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
+      _machineBloc.add(LoadMachineEvent(widget.machineId));
+    });
+
+    _machineBloc.stream.listen((state) {
+      if (state is MachineLoadedState) {
+        _machineStreamController.add(state.machine);
+      }
     });
   }
 
@@ -52,7 +59,6 @@ class _Statistics extends State<Statistics> {
                 if (state is MachineLoadingState) {
                   return const CircularProgressIndicator();
                 } else if (state is MachineLoadedState) {
-                  _updateTimerDuration(state.machine.sendingTime);
                   return _buildStatisticsColumn(state.machine);
                 } else if (state is MachineErrorState) {
                   return const Text('Error while loading machine');
@@ -65,14 +71,6 @@ class _Statistics extends State<Statistics> {
         ),
       ),
     );
-  }
-
-  void _updateTimerDuration(int sendingTime) {
-    int newDuration = (sendingTime / 1000).round();
-    if (newDuration != duration) {
-      duration = newDuration;
-      _startTimer();
-    }
   }
 
   Widget _buildStatisticsColumn(Machine machine) {

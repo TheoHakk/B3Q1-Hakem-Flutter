@@ -1,13 +1,12 @@
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Chart/chart.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performance.dart';
 import 'package:flutter/material.dart';
-import '../../../Model/Machine/machine.dart';
 import '../Stats/statistics.dart';
 
 class GroupedInformations extends StatefulWidget {
-  const GroupedInformations({super.key, required this.id});
+  const GroupedInformations({super.key, required this.machineId});
 
-  final String id;
+  final String machineId;
 
   @override
   State<GroupedInformations> createState() => _GroupedInformations();
@@ -23,14 +22,14 @@ class _GroupedInformations extends State<GroupedInformations> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Statistics(id: widget.id),
+              Statistics(machineId: widget.machineId),
               SizedBox(
                 height: screenHeight * 0.4,
-                child: Performance(id: widget.id),
+                child: Performance(machineId: widget.machineId),
               ),
               SizedBox(
                 height: screenHeight * 0.4,
-                child: SizedBox(width: constraints.maxWidth, child: Chart()),
+                child: SizedBox(width: constraints.maxWidth, child: Chart(machineId: widget.machineId)),
               )
             ],
           ),
@@ -41,19 +40,19 @@ class _GroupedInformations extends State<GroupedInformations> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Statistics(id: widget.id),
+            Statistics(machineId: widget.machineId),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
                   width: constraints.maxWidth / 2,
                   height: screenHeight * 0.4,
-                  child: Performance(id: widget.id),
+                  child: Performance(machineId: widget.machineId),
                 ),
                 SizedBox(
                   height: screenHeight * 0.4,
                   child:
-                      SizedBox(width: constraints.maxWidth / 2, child: Chart()),
+                      SizedBox(width: constraints.maxWidth / 2, child: Chart(machineId: widget.machineId)),
                 )
               ],
             )

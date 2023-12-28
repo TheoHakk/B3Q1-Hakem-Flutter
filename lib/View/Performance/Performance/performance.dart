@@ -14,9 +14,9 @@ import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
 
 class Performance extends StatefulWidget {
-  const Performance({super.key, required this.id});
+  const Performance({super.key, required this.machineId});
 
-  final String id;
+  final String machineId;
 
   @override
   State<Performance> createState() => _Performance();
@@ -29,37 +29,41 @@ class _Performance extends State<Performance> {
   Timer? _timer;
   int duration = 10;
 
+  final StreamController<Unit> _unitsStreamController = StreamController.broadcast();
+  final StreamController<Machine> _machineStreamController = StreamController.broadcast();
+
+
   @override
   void initState() {
     super.initState();
+
     _machineBloc = BlocProvider.of<MachineBloc>(context);
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    _unitsBloc.add(FetchLastUnit(widget.id));
-    _machineBloc.add(LoadMachineEvent(widget.id));
-    _startTimer();
+    _unitsBloc.add(FetchLastUnit(widget.machineId));
+    _machineBloc.add(LoadMachineEvent(widget.machineId));
+
+    _unitsBloc.stream.listen((state) {
+      if (state is LastUnitLoadedState) {
+        _unitsStreamController.add(state.unit);
+      }
+    });
+
+    _machineBloc.stream.listen((state) {
+      if (state is MachineLoadedState) {
+        _machineStreamController.add(state.machine);
+      }
+    });
+
+    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
+      _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
+      _machineBloc.add(LoadMachineEvent(widget.machineId));
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
-  }
-
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      BlocProvider.of<MachineBloc>(context).add(LoadMachineEvent(widget.id));
-      _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-      _unitsBloc.add(FetchLastUnit(widget.id));
-    });
-  }
-
-  void _updateTimerDuration(int sendingTime) {
-    int newDuration = (sendingTime / 1000).round();
-    if (newDuration != duration) {
-      duration = newDuration;
-      _startTimer();
-    }
   }
 
   @override
@@ -71,7 +75,6 @@ class _Performance extends State<Performance> {
             return const CircularProgressIndicator();
           } else if (machineState is MachineLoadedState) {
             Machine machine = machineState.machine;
-            _updateTimerDuration(machine.sendingTime);
             return BlocBuilder<UnitsBloc, UnitsState>(
                 bloc: _unitsBloc,
                 builder: (context, state) {

@@ -4,15 +4,15 @@ import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../BloC/User/user_bloc.dart';
-import '../Firebase/Configuration/firebase_options.dart';
-import '../Firebase/Repositories/firebase_user_repository.dart';
-import '../Firebase/Repositories/user_repository.dart';
-import '../View/AppViews/Machines/machine_detail.dart';
-import '../View/AppViews/Machines/machine_selection.dart';
-import '../View/AppViews/Error/not_found.dart';
-import '../View/Forms/form_machine.dart';
-import '../View/Login/login_page.dart';
+import 'BloC/User/user_bloc.dart';
+import 'Firebase/Configuration/firebase_options.dart';
+import 'Firebase/Repositories/firebase_user_repository.dart';
+import 'Firebase/Repositories/user_repository.dart';
+import 'View/AppViews/Machines/machine_detail.dart';
+import 'View/AppViews/Machines/machine_selection.dart';
+import 'View/AppViews/Error/not_found.dart';
+import 'View/Forms/form_machine.dart';
+import 'View/Login/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -12,7 +12,7 @@ class Statistics extends StatefulWidget {
   const Statistics({super.key, required this.machineId});
 
   @override
-  _Statistics createState() => _Statistics();
+  State<Statistics> createState() => _Statistics();
 }
 
 class _Statistics extends State<Statistics> {
@@ -27,10 +27,15 @@ class _Statistics extends State<Statistics> {
   void initState() {
     super.initState();
     _machineBloc = BlocProvider.of<MachineBloc>(context);
-    _machineBloc.add(LoadMachineEvent(widget.machineId));
+
+    if (widget.machineId != 'null') {
+      _machineBloc.add(LoadMachineEvent(widget.machineId));
+    }
 
     _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      _machineBloc.add(LoadMachineEvent(widget.machineId));
+      if(widget.machineId != 'null') {
+        _machineBloc.add(LoadMachineEvent(widget.machineId));
+      }
     });
 
     _machineBloc.stream.listen((state) {

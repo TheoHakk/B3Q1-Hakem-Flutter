@@ -29,7 +29,9 @@ class _GroupedInformations extends State<GroupedInformations> {
               ),
               SizedBox(
                 height: screenHeight * 0.4,
-                child: SizedBox(width: constraints.maxWidth, child: Chart(machineId: widget.machineId)),
+                child: SizedBox(
+                    width: constraints.maxWidth,
+                    child: Chart(machineId: widget.machineId)),
               )
             ],
           ),
@@ -51,8 +53,9 @@ class _GroupedInformations extends State<GroupedInformations> {
                 ),
                 SizedBox(
                   height: screenHeight * 0.4,
-                  child:
-                      SizedBox(width: constraints.maxWidth / 2, child: Chart(machineId: widget.machineId)),
+                  child: SizedBox(
+                      width: constraints.maxWidth / 2,
+                      child: Chart(machineId: widget.machineId)),
                 )
               ],
             )

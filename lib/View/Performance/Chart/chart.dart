@@ -129,7 +129,7 @@ class ChartState extends State<Chart> {
     const style = TextStyle(fontSize: 10);
     String text;
     if (value.toInt() < units.length) {
-      text = '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value.toInt()].second}';
+      text = '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value.toInt()].second}\n with : ${units[value.toInt()].nbUnits}';
     } else {
       text = '';
     }

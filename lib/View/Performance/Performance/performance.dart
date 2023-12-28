@@ -23,24 +23,30 @@ class Performance extends StatefulWidget {
 }
 
 class _Performance extends State<Performance> {
+  late String machineId;
   late UnitsBloc _unitsBloc;
   late MachineBloc _machineBloc;
 
   Timer? _timer;
   int duration = 10;
 
-  final StreamController<Unit> _unitsStreamController = StreamController.broadcast();
-  final StreamController<Machine> _machineStreamController = StreamController.broadcast();
-
+  final StreamController<Unit> _unitsStreamController =
+      StreamController.broadcast();
+  final StreamController<Machine> _machineStreamController =
+      StreamController.broadcast();
 
   @override
   void initState() {
     super.initState();
+    machineId = widget.machineId;
 
     _machineBloc = BlocProvider.of<MachineBloc>(context);
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    _unitsBloc.add(FetchLastUnit(widget.machineId));
-    _machineBloc.add(LoadMachineEvent(widget.machineId));
+
+    _unitsBloc.add(FetchLastUnit(machineId));
+    if (machineId != 'null') {
+      _machineBloc.add(LoadMachineEvent(machineId));
+    }
 
     _unitsBloc.stream.listen((state) {
       if (state is LastUnitLoadedState) {
@@ -55,8 +61,10 @@ class _Performance extends State<Performance> {
     });
 
     _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
-      _machineBloc.add(LoadMachineEvent(widget.machineId));
+      if (widget.machineId != 'null') {
+        _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
+        _machineBloc.add(LoadMachineEvent(widget.machineId));
+      }
     });
   }
 

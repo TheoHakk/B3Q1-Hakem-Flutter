@@ -42,6 +42,7 @@ class Api {
   }
 
   Future<Machine> fetchMachine(String id) async {
+    print(id);
     final response =
         await http.get(Uri.parse('$baseUrl/Machine?machineId=$id'));
     if (response.statusCode == 200) {

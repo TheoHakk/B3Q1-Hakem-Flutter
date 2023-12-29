@@ -7,7 +7,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../BloC/Machine/machine_bloc.dart';
+import '../../../BloC/Machine/machine_event.dart';
+import '../../../BloC/Machine/machine_state.dart';
 import '../../../BloC/Units/units_state.dart';
+import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
 
 class Chart extends StatefulWidget {
@@ -23,21 +27,33 @@ class Chart extends StatefulWidget {
 
 class ChartState extends State<Chart> {
   Timer? _timer;
-  int objectif = 5;
+  double objectif = 5 as double;
   int duration = 10;
   late List<Unit> units;
   late UnitsBloc _unitsBloc;
+  late MachineBloc _machineBloc;
 
-  final BehaviorSubject<List<Unit>> _unitsStreamController = BehaviorSubject<List<Unit>>();
+  final BehaviorSubject<List<Unit>> _unitsStreamController = BehaviorSubject<
+      List<Unit>>();
 
   @override
   void initState() {
     super.initState();
-    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
 
-    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
+    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    _machineBloc = BlocProvider.of<MachineBloc>(context);
+    _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
+    _machineBloc.add(LoadMachineEvent(widget.machineId));
+
+
+    void fetchData(){
       _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
+      _machineBloc.add(LoadMachineEvent(widget.machineId));
+    }
+
+    fetchData();
+    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
+      fetchData();
     });
 
     _unitsBloc.stream.listen((state) {
@@ -45,6 +61,16 @@ class ChartState extends State<Chart> {
         _unitsStreamController.add(state.units);
       }
     });
+
+    _machineBloc.stream.listen((state) {
+      if (state is MachineLoadedState) {
+        setState(() {
+          objectif = ((state.machine.productionGoal)/(60000/state.machine.sendingTime));
+          print(objectif);
+        });
+      }
+    });
+
   }
 
   @override
@@ -101,8 +127,10 @@ class ChartState extends State<Chart> {
                         getTitlesWidget: (value, meta) => leftTitles(value),
                       ),
                     ),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(sideTitles: SideTitles(
+                        showTitles: false)),
+                    rightTitles: const AxisTitles(sideTitles: SideTitles(
+                        showTitles: false)),
                   ),
                   borderData: FlBorderData(show: false),
                   groupsSpace: barsSpace,
@@ -130,7 +158,9 @@ class ChartState extends State<Chart> {
     const style = TextStyle(fontSize: 10);
     String text;
     if (value.toInt() < units.length) {
-      text = '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value.toInt()].second}\n with : ${units[value.toInt()].nbUnits}';
+      text =
+      '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value
+          .toInt()].second}\n with : ${units[value.toInt()].nbUnits}';
     } else {
       text = '';
     }

@@ -43,6 +43,7 @@ dependencies:
   syncfusion_flutter_gauges: ^23.2.7
   http: ^1.1.2
   equatable: ^2.0.5
+  rxdart: ^0.27.7
 
 
 dev_dependencies:

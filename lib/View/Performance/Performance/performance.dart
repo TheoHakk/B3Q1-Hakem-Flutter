@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:rxdart/rxdart.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +29,10 @@ class _Performance extends State<Performance> {
   Timer? _timer;
   int duration = 10;
 
-  final StreamController<Unit> _unitsStreamController =
-      StreamController.broadcast();
-  final StreamController<Machine> _machineStreamController =
-      StreamController.broadcast();
+  final BehaviorSubject<Unit> _unitsStreamController =
+      BehaviorSubject<Unit>();
+  final BehaviorSubject<Machine> _machineStreamController =
+      BehaviorSubject<Machine>();
 
   @override
   void initState() {
@@ -67,49 +67,55 @@ class _Performance extends State<Performance> {
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  build(BuildContext context) {
+    return StreamBuilder<Machine>(
+      stream: _machineStreamController.stream,
+      builder: (context, machineSnapshot) {
+        if (machineSnapshot.hasData) {
+          Machine machine = machineSnapshot.data!;
+          return StreamBuilder<Unit>(
+            stream: _unitsStreamController.stream,
+            builder: (context, unitSnapshot) {
+              if (unitSnapshot.hasData) {
+                Unit unit = unitSnapshot.data!;
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Actual : ${unit.nbUnits} / ${machine.productionGoal}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: _buildRadialTextPointer(unit, machine),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (unitSnapshot.hasError) {
+                return const Text('Error while loading units');
+              } else {
+                return Text('Error not captured unit ${machine.name}');
+              }
+            },
+          );
+        } else if (machineSnapshot.hasError) {
+          return const Text('Error while loading machine');
+        } else {
+          return const Text('Error not captured machine');
+        }
+      },
+    );
   }
 
   @override
-  build(BuildContext context) {
-    return BlocBuilder<MachineBloc, MachineState>(
-        bloc: _machineBloc,
-        builder: (context, machineState) {
-          if (machineState is MachineLoadingState) {
-            return const CircularProgressIndicator();
-          } else if (machineState is MachineLoadedState) {
-            Machine machine = machineState.machine;
-            return BlocBuilder<UnitsBloc, UnitsState>(
-                bloc: _unitsBloc,
-                builder: (context, state) {
-                  if (state is LastUnitLoadingState) {
-                    print("loading");
-                    return const CircularProgressIndicator();
-                  } else if (state is LastUnitLoadedState) {
-                    Unit lastUnit = state.unit;
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: _buildRadialTextPointer(lastUnit, machine),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else if (state is LastUnitErrorState) {
-                    return const Text('Une erreur est survenue');
-                  } else {
-                    return const Text('Une erreur est survenue et non gérée');
-                  }
-                });
-          }
-          return const Text('Une erreur est survenue');
-        });
+  void dispose() {
+    _unitsStreamController.close();
+    _machineStreamController.close();
+    super.dispose();
   }
 
   SfRadialGauge _buildRadialTextPointer(Unit unit, Machine machine) {

@@ -11,8 +11,6 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
     on<FetchMachineEvent>((event, emit) async {
       emit(MachineLoadingState());
       try {
-        print('machine bloc');
-        print(event.id);
         final Machine machine = await api.fetchMachine(event.id);
         emit(MachineLoadedState(machine));
       } catch (e) {
@@ -23,8 +21,6 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
     on<LoadMachineEvent>((event, emit) async {
       emit(MachineLoadingState());
       try {
-        print('machine bloc load');
-        print(event.id);
         final Machine machine = await api.fetchMachine(event.id);
         emit(MachineLoadedState(machine));
       } catch (e) {

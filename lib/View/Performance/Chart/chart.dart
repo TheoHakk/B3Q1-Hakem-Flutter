@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_event.dart';
@@ -27,7 +28,7 @@ class ChartState extends State<Chart> {
   late List<Unit> units;
   late UnitsBloc _unitsBloc;
 
-  final StreamController<List<Unit>> _unitsStreamController = StreamController.broadcast();
+  final BehaviorSubject<List<Unit>> _unitsStreamController = BehaviorSubject<List<Unit>>();
 
   @override
   void initState() {
@@ -61,9 +62,9 @@ class ChartState extends State<Chart> {
           units = snapshot.data!;
           return buildChart();
         } else if (snapshot.hasError) {
-          return const Text('Error while loading units');
+          return const CircularProgressIndicator();
         } else {
-          return const Text('Error not captured');
+          return const CircularProgressIndicator();
         }
       },
     );

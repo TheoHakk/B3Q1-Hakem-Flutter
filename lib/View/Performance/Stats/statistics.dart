@@ -7,6 +7,7 @@ import '../../../Model/Machine/machine.dart';
 
 class Statistics extends StatelessWidget {
   final String machineId;
+
   const Statistics({super.key, required this.machineId});
 
   @override
@@ -34,7 +35,7 @@ class Statistics extends StatelessWidget {
                   if (state is MachineLoadedState) {
                     return _buildStatisticsColumn(state.machine);
                   } else {
-                    return Text('Error not captured ${state.toString()}');
+                    return const CircularProgressIndicator();
                   }
                 } else {
                   return const Text('No data');
@@ -52,23 +53,23 @@ class Statistics extends StatelessWidget {
       children: [
         const Text("Statistics",
             style: TextStyle(
-                fontSize: 25,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline)),
         Text("Machine identifier: ${machine.id}",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Machine name: ${machine.name}",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Average minute production goal: ${machine.productionGoal}",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Average daily production: notImplemented /minute",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Average hour production: notImplemented/minute",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Start hour: notImplemented",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
         Text("Time inactivity: notImplemented",
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 25)),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:rxdart/rxdart.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,10 @@ class _Performance extends State<Performance> {
   late MachineBloc _machineBloc;
 
   Timer? _timer;
+
   int duration = 10;
 
-  final BehaviorSubject<Unit> _unitsStreamController =
-      BehaviorSubject<Unit>();
+  final BehaviorSubject<Unit> _unitsStreamController = BehaviorSubject<Unit>();
   final BehaviorSubject<Machine> _machineStreamController =
       BehaviorSubject<Machine>();
 
@@ -41,9 +42,16 @@ class _Performance extends State<Performance> {
     _machineBloc = BlocProvider.of<MachineBloc>(context);
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
 
-    if (widget.machineId != 'null') {
+    void fetchData() {
       _unitsBloc.add(FetchLastUnit(widget.machineId));
       _machineBloc.add(LoadMachineEvent(widget.machineId));
+    }
+
+    if (widget.machineId != 'null') {
+      fetchData();
+      _timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
+        fetchData();
+      });
     }
 
     _unitsBloc.stream.listen((state) {
@@ -57,17 +65,10 @@ class _Performance extends State<Performance> {
         _machineStreamController.add(state.machine);
       }
     });
-
-    _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      if (widget.machineId != 'null') {
-        _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
-        _machineBloc.add(LoadMachineEvent(widget.machineId));
-      }
-    });
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return StreamBuilder<Machine>(
       stream: _machineStreamController.stream,
       builder: (context, machineSnapshot) {
@@ -78,34 +79,14 @@ class _Performance extends State<Performance> {
             builder: (context, unitSnapshot) {
               if (unitSnapshot.hasData) {
                 Unit unit = unitSnapshot.data!;
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Actual : ${unit.nbUnits} / ${machine.productionGoal}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: _buildRadialTextPointer(unit, machine),
-                      ),
-                    ],
-                  ),
-                );
-              } else if (unitSnapshot.hasError) {
-                return const Text('Error while loading units');
+                return _buildPerformanceView(unit, machine);
               } else {
-                return Text('Error not captured unit ${machine.name}');
+                return const CircularProgressIndicator();
               }
             },
           );
-        } else if (machineSnapshot.hasError) {
-          return const Text('Error while loading machine');
         } else {
-          return const Text('Error not captured machine');
+          return const CircularProgressIndicator();
         }
       },
     );
@@ -113,96 +94,101 @@ class _Performance extends State<Performance> {
 
   @override
   void dispose() {
+    _timer?.cancel();
     _unitsStreamController.close();
     _machineStreamController.close();
     super.dispose();
   }
 
-  SfRadialGauge _buildRadialTextPointer(Unit unit, Machine machine) {
-    double objectif = machine.productionGoal as double;
-    double actual = unit.nbUnits as double;
+  Widget _buildPerformanceView(Unit unit, Machine machine) {
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+      child: Column(
+        children: [
+          Text('Actual : ${unit.nbUnits} / ${machine.productionGoal}',
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Expanded(flex: 2, child: _buildRadialTextPointer(unit, machine)),
+        ],
+      ),
+    );
+  }
 
-    double actualPointerValue = (actual / objectif) * 60;
+  SfRadialGauge _buildRadialTextPointer(Unit unit, Machine machine) {
+    double actualPointerValue = (unit.nbUnits / machine.productionGoal) * 60;
 
     return SfRadialGauge(
       axes: <RadialAxis>[
-        RadialAxis(
-            showAxisLine: false,
-            showLabels: false,
-            showTicks: false,
-            startAngle: 180,
-            endAngle: 360,
-            maximum: 120,
-            canScaleToFit: true,
-            radiusFactor: 0.79,
-            pointers: <GaugePointer>[
-              NeedlePointer(
-                  needleEndWidth: 5,
-                  needleLength: 0.7,
-                  value: actualPointerValue,
-                  knobStyle: const KnobStyle(knobRadius: 0)),
-            ],
-            ranges: <GaugeRange>[
-              //ça va de 0 à 120
-              GaugeRange(
-                  startValue: 0,
-                  endValue: 40,
-                  startWidth: 0.45,
-                  endWidth: 0.45,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  color: const Color(0xFFDD3800)),
-              GaugeRange(
-                  startValue: 40.5,
-                  endValue: 80,
-                  startWidth: 0.45,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  endWidth: 0.45,
-                  color: const Color(0xFFFFDF10)),
-              GaugeRange(
-                  startValue: 80.5,
-                  endValue: 120,
-                  startWidth: 0.45,
-                  endWidth: 0.45,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  color: const Color(0xFF64BE00)),
-            ]),
-        RadialAxis(
-          showAxisLine: false,
-          showLabels: false,
-          showTicks: false,
-          startAngle: 180,
-          endAngle: 360,
-          maximum: 120,
-          radiusFactor: 0.85,
-          canScaleToFit: true,
-          pointers: const <GaugePointer>[
-            MarkerPointer(
-                markerType: MarkerType.text,
-                text: 'Insuffisant',
-                value: 20.5,
-                textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
-                offsetUnit: GaugeSizeUnit.factor,
-                markerOffset: -0.12),
-            MarkerPointer(
-                markerType: MarkerType.text,
-                text: 'Dans la moyenne',
-                value: 60.5,
-                textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
-                offsetUnit: GaugeSizeUnit.factor,
-                markerOffset: -0.12),
-            MarkerPointer(
-                markerType: MarkerType.text,
-                text: 'Bon !!',
-                value: 100.5,
-                textStyle: GaugeTextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: 'Times'),
-                offsetUnit: GaugeSizeUnit.factor,
-                markerOffset: -0.12)
-          ],
-        ),
+        _buildRadialAxis(actualPointerValue),
+        _buildTextRadialAxis(),
       ],
+    );
+  }
+
+  RadialAxis _buildRadialAxis(double actualPointerValue) {
+    return RadialAxis(
+      showAxisLine: false,
+      showLabels: false,
+      showTicks: false,
+      startAngle: 180,
+      endAngle: 360,
+      maximum: 120,
+      canScaleToFit: true,
+      radiusFactor: 0.79,
+      pointers: <GaugePointer>[
+        NeedlePointer(
+            needleEndWidth: 5,
+            needleLength: 0.7,
+            value: actualPointerValue,
+            knobStyle: const KnobStyle(knobRadius: 0)),
+      ],
+      ranges: <GaugeRange>[
+        _buildGaugeRange(0, 40, 0xFFDD3800),
+        _buildGaugeRange(40.5, 80, 0xFFFFDF10),
+        _buildGaugeRange(80.5, 120, 0xFF64BE00),
+      ],
+    );
+  }
+
+  RadialAxis _buildTextRadialAxis() {
+    return RadialAxis(
+      showAxisLine: false,
+      showLabels: false,
+      showTicks: false,
+      startAngle: 180,
+      endAngle: 360,
+      maximum: 120,
+      radiusFactor: 0.85,
+      canScaleToFit: true,
+      pointers: <GaugePointer>[
+        _buildMarkerPointer('Insuffisant', 20.5),
+        _buildMarkerPointer('Dans la moyenne', 60.5),
+        _buildMarkerPointer('Bon !!', 100.5),
+      ],
+    );
+  }
+
+  GaugeRange _buildGaugeRange(double startValue, double endValue, int color) {
+    return GaugeRange(
+      startValue: startValue,
+      endValue: endValue,
+      startWidth: 0.45,
+      endWidth: 0.45,
+      sizeUnit: GaugeSizeUnit.factor,
+      color: Color(color),
+    );
+  }
+
+  MarkerPointer _buildMarkerPointer(String text, double value) {
+    return MarkerPointer(
+      markerType: MarkerType.text,
+      text: text,
+      value: value,
+      textStyle: const GaugeTextStyle(
+          fontWeight: FontWeight.bold, fontFamily: 'Times'),
+      offsetUnit: GaugeSizeUnit.factor,
+      markerOffset: -0.12,
     );
   }
 }

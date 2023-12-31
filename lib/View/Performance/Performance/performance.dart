@@ -106,9 +106,6 @@ class _Performance extends State<Performance> {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: [
-          Text('Actual : ${unit.nbUnits} / ${machine.productionGoal}',
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           Expanded(flex: 2, child: _buildRadialTextPointer(unit, machine)),
         ],
       ),

@@ -174,15 +174,15 @@ class ChartState extends State<Chart> {
 
   List<BarChartGroupData> getData(double barsWidth, double barsSpace) {
     return List.generate(units.length, (i) {
+      double unitValue = units[i].nbUnits.toDouble();
       return BarChartGroupData(
         x: i,
         barsSpace: barsSpace,
         barRods: [
           BarChartRodData(
-            toY: units[i].nbUnits.toDouble(),
+            toY: unitValue,
             rodStackItems: [
-              BarChartRodStackItem(0, objectif.toDouble(), widget.dark),
-              BarChartRodStackItem(objectif.toDouble(), 50000.0, widget.light),
+              BarChartRodStackItem(0, unitValue, unitValue >= objectif.toDouble() ? widget.light : widget.dark),
             ],
             borderRadius: BorderRadius.zero,
             width: barsWidth,

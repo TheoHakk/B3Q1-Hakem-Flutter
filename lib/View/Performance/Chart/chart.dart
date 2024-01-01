@@ -24,8 +24,8 @@ class Chart extends StatefulWidget {
 
 class ChartState extends State<Chart> {
   Timer? _timer;
-  double objectif = 5 as double;
-  int duration = 10;
+  late int duration;
+  late double goal;
   late List<Unit> units;
   late UnitsBloc _unitsBloc;
 
@@ -33,9 +33,10 @@ class ChartState extends State<Chart> {
   void initState() {
     super.initState();
 
-    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
+    duration = ((widget.machine.sendingTime)/1000) as int;
+    goal = (duration/60) * widget.machine.productionGoal;
 
+    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
     _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
     _timer = Timer.periodic(Duration(seconds: duration), (timer) {
       _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
@@ -107,7 +108,7 @@ class ChartState extends State<Chart> {
                   extraLinesData: ExtraLinesData(
                     horizontalLines: [
                       HorizontalLine(
-                        y: objectif.toDouble(),
+                        y: goal,
                         color: Colors.blueAccent,
                         strokeWidth: 2,
                         dashArray: [10, 5],
@@ -153,7 +154,7 @@ class ChartState extends State<Chart> {
               BarChartRodStackItem(
                   0,
                   unitValue,
-                  unitValue >= objectif.toDouble()
+                  unitValue >= goal
                       ? widget.light
                       : widget.dark),
             ],

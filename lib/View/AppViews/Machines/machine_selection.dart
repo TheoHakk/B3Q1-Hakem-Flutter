@@ -42,7 +42,7 @@ class _MachineSelection extends State<MachineSelection> {
 
   @override
   void didChangeDependencies() {
-    //actualise the bloc when adding a machine
+    //actualise the bloc when adding a machine, work also for the machine bloc
     super.didChangeDependencies();
     _machinesBloc.add(LoadMachinesEvent());
   }

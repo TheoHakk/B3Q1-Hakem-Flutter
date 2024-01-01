@@ -14,6 +14,7 @@ class FormMachine extends StatefulWidget {
 }
 
 class _FormMachine extends State<FormMachine> {
+  late int _delayTime;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
@@ -21,10 +22,14 @@ class _FormMachine extends State<FormMachine> {
 
   void validateForm() {
     if (_formKey.currentState!.validate()) {
+
       try {
         int.parse(_goalController.text);
         int.parse(_dataDelayController.text);
+        _delayTime = (int.parse(_dataDelayController.text)*1000);
       } catch (e) {
+        SnackBar snackBar = SnackBar(content: Text(e.toString()));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return;
       }
 
@@ -32,13 +37,13 @@ class _FormMachine extends State<FormMachine> {
         if (widget.machineId == null) {
           BlocProvider.of<MachineBloc>(context).add(CreateMachineEvent(
               _goalController.text,
-              _dataDelayController.text,
+              _delayTime.toString(),
               _nameController.text));
         } else if (widget.machineId != null) {
           BlocProvider.of<MachineBloc>(context).add(UpdateMachineEvent(
               widget.machineId!,
               _goalController.text,
-              _dataDelayController.text,
+              _delayTime.toString(),
               _nameController.text));
         } else {
           throw Exception("Invalid machine id");

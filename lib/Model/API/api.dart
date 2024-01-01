@@ -10,8 +10,6 @@ class Api {
   Future<List<Unit>> fetchLastUnits(String machineId) async {
     //simple test for the machineId, control if it's an int
     int testId = int.parse(machineId);
-
-    //Return a list of the ten last units
     final response =
         await http.get(Uri.parse('$baseUrl/LastUnits?machineId=$machineId'));
 
@@ -47,7 +45,6 @@ class Api {
   }
 
   Future<Machine> fetchMachine(String id) async {
-
     int testId = int.parse(id);
 
     final response =
@@ -72,11 +69,7 @@ class Api {
   }
 
   updateMachine(String id, String productionGoal, String sendingTime, String name) {
-    print("update machine");
-    print(id);
     int testId = int.parse(id);
-    print(testId);
-
     //I've to use post instead of put because it doesn't work with put
     http.post(
       Uri.parse('$baseUrl/UpdateMachine'),

@@ -123,10 +123,8 @@ class _MachineDetail extends State<MachineDetail> {
                               ListTile(
                                 leading: const Icon(Icons.edit),
                                 title: const Text('Update a machine'),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/update/${widget.id}');
-                                  BlocProvider.of<MachinesBloc>(context)
-                                      .add(LoadMachinesEvent());
+                                onTap: () async {
+                                  await Navigator.pushNamed(context, '/update/${widget.id}');
                                   BlocProvider.of<MachineBloc>(context)
                                       .add(LoadMachineEvent(widget.id));
                                 },

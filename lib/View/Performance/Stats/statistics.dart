@@ -1,76 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../BloC/Machine/machine_bloc.dart';
-import '../../../BloC/Machine/machine_event.dart';
-import '../../../BloC/Machine/machine_state.dart';
 import '../../../Model/Machine/machine.dart';
 
-class Statistics extends StatelessWidget {
-  final String machineId;
+class Statistics extends StatefulWidget {
+  final Machine machine;
 
-  const Statistics({super.key, required this.machineId});
+  const Statistics({super.key, required this.machine});
 
   @override
-  Widget build(BuildContext context) {
-    final machineBloc = BlocProvider.of<MachineBloc>(context);
-    if (machineId != 'null') {
-      machineBloc.add(LoadMachineEvent(machineId));
-    }
+  State<Statistics> createState() => _Statistics();
+}
 
+class _Statistics extends State<Statistics> {
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            StreamBuilder<MachineState>(
-              stream: machineBloc.stream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasData) {
-                  MachineState state = snapshot.data!;
-                  if (state is MachineLoadedState) {
-                    return _buildStatisticsColumn(state.machine);
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                } else {
-                  return const Text('No data');
-                }
-              },
-            )
+            const Text("Statistics",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            Text("Machine identifier: ${widget.machine.id}",
+                style: const TextStyle(fontSize: 25)),
+            Text("Machine name: ${widget.machine.name}",
+                style: const TextStyle(fontSize: 25)),
+            Text("Average minute production goal: ${widget.machine.productionGoal}",
+                style: const TextStyle(fontSize: 25)),
+            Text("Average daily production: notImplemented /minute",
+                style: const TextStyle(fontSize: 25)),
+            Text("Average hour production: notImplemented/minute",
+                style: const TextStyle(fontSize: 25)),
+            Text("Start hour: notImplemented",
+                style: const TextStyle(fontSize: 25)),
+            Text("Time inactivity: notImplemented",
+                style: const TextStyle(fontSize: 25)),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatisticsColumn(Machine machine) {
-    return Column(
-      children: [
-        const Text("Statistics",
-            style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline)),
-        Text("Machine identifier: ${machine.id}",
-            style: const TextStyle(fontSize: 25)),
-        Text("Machine name: ${machine.name}",
-            style: const TextStyle(fontSize: 25)),
-        Text("Average minute production goal: ${machine.productionGoal}",
-            style: const TextStyle(fontSize: 25)),
-        Text("Average daily production: notImplemented /minute",
-            style: const TextStyle(fontSize: 25)),
-        Text("Average hour production: notImplemented/minute",
-            style: const TextStyle(fontSize: 25)),
-        Text("Start hour: notImplemented",
-            style: const TextStyle(fontSize: 25)),
-        Text("Time inactivity: notImplemented",
-            style: const TextStyle(fontSize: 25)),
-      ],
     );
   }
 }

@@ -7,15 +7,6 @@ abstract class MachineEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMachineEvent extends MachineEvent {
-  final String id;
-
-  const LoadMachineEvent(this.id);
-
-  @override
-  List<Object> get props => [id];
-}
-
 class FetchMachineEvent extends MachineEvent {
   final String id;
 

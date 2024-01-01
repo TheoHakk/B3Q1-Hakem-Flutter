@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:rxdart/rxdart.dart';
 
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_event.dart';
@@ -7,18 +6,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../BloC/Machine/machine_bloc.dart';
-import '../../../BloC/Machine/machine_event.dart';
-import '../../../BloC/Machine/machine_state.dart';
 import '../../../BloC/Units/units_state.dart';
+import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
 
 class Chart extends StatefulWidget {
-  final String machineId;
   final Color dark = Colors.redAccent;
   final Color light = Colors.greenAccent;
 
-  const Chart({super.key, required this.machineId});
+  final Machine machine;
+
+  const Chart({super.key, required this.machine});
 
   @override
   State<StatefulWidget> createState() => ChartState();
@@ -30,41 +28,17 @@ class ChartState extends State<Chart> {
   int duration = 10;
   late List<Unit> units;
   late UnitsBloc _unitsBloc;
-  late MachineBloc _machineBloc;
-
-  final BehaviorSubject<List<Unit>> _unitsStreamController =
-      BehaviorSubject<List<Unit>>();
 
   @override
   void initState() {
     super.initState();
 
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    _machineBloc = BlocProvider.of<MachineBloc>(context);
-    _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
-    _machineBloc.add(LoadMachineEvent(widget.machineId));
+    _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
 
-    void fetchData() {
-      _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
-      _machineBloc.add(LoadMachineEvent(widget.machineId));
-    }
-
-    fetchData();
+    _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
     _timer = Timer.periodic(Duration(seconds: duration), (timer) {
-      fetchData();
-    });
-
-    _unitsBloc.stream.listen((state) {
-      if (state is UnitsLoadedState) {
-        _unitsStreamController.add(state.units);
-      }
-    });
-
-    _machineBloc.stream.listen((state) {
-      if (state is MachineLoadedState) {
-        objectif = ((state.machine.productionGoal) /
-            (60000 / state.machine.sendingTime));
-      }
+      _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
     });
   }
 
@@ -76,19 +50,19 @@ class ChartState extends State<Chart> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Unit>>(
-      stream: _unitsStreamController.stream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          units = snapshot.data!;
-          return buildChart();
-        } else if (snapshot.hasError) {
+    return BlocBuilder<UnitsBloc, UnitsState>(
+        bloc: _unitsBloc,
+        builder: (context, state) {
+          if (state is UnitsLoadingState) {
+            return const CircularProgressIndicator();
+          } else if (state is UnitsLoadedState) {
+            units = state.units;
+            return buildChart();
+          } else if (state is UnitsErrorState) {
+            return const Text('Une erreur est survenue');
+          }
           return const CircularProgressIndicator();
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
-    );
+        });
   }
 
   Widget buildChart() {

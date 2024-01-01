@@ -1,5 +1,6 @@
 import 'package:b3q1_hakem_projet_flutter/BloC/Machine/machine_bloc.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Machines/machines_bloc.dart';
+import 'package:b3q1_hakem_projet_flutter/BloC/Unit/last_unit_bloc.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<MachineBloc>(create: (context) => MachineBloc()),
         BlocProvider<UnitsBloc>(create: (context) => UnitsBloc()),
         BlocProvider<UserBloc>.value(value: userBloc),
+        BlocProvider<LastUnitBloc>(create: (context) => LastUnitBloc()),
       ],
       child: MaterialApp(
         title: 'Performance counter',

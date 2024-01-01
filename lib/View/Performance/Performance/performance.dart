@@ -1,101 +1,67 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
+import 'package:b3q1_hakem_projet_flutter/BloC/Unit/last_unit_state.dart';
 import 'package:b3q1_hakem_projet_flutter/BloC/Units/units_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
-import '../../../BloC/Machine/machine_bloc.dart';
-import '../../../BloC/Machine/machine_event.dart';
-import '../../../BloC/Machine/machine_state.dart';
+import '../../../BloC/Unit/last_unit_bloc.dart';
+import '../../../BloC/Unit/last_unit_event.dart';
 import '../../../BloC/Units/units_event.dart';
 import '../../../BloC/Units/units_state.dart';
 import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
 
 class Performance extends StatefulWidget {
-  const Performance({super.key, required this.machineId});
+  const Performance({super.key, required this.machine});
 
-  final String machineId;
+  final Machine machine;
 
   @override
   State<Performance> createState() => _Performance();
 }
 
 class _Performance extends State<Performance> {
-  late UnitsBloc _unitsBloc;
-  late MachineBloc _machineBloc;
-
+  late LastUnitBloc _lastUnitBloc;
   Timer? _timer;
 
   int duration = 10;
-
-  final BehaviorSubject<Unit> _unitsStreamController = BehaviorSubject<Unit>();
-  final BehaviorSubject<Machine> _machineStreamController =
-      BehaviorSubject<Machine>();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _machineBloc = BlocProvider.of<MachineBloc>(context);
-    _unitsBloc = BlocProvider.of<UnitsBloc>(context);
-
-    void fetchData() {
-      _unitsBloc.add(FetchLastUnit(widget.machineId));
-      _machineBloc.add(LoadMachineEvent(widget.machineId));
-    }
-
-    if (widget.machineId != 'null') {
-      fetchData();
-      _timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
-        fetchData();
-      });
-    }
-
-    _unitsBloc.stream.listen((state) {
-      if (state is LastUnitLoadedState) {
-        _unitsStreamController.add(state.unit);
-      }
-    });
-
-    _machineBloc.stream.listen((state) {
-      if (state is MachineLoadedState) {
-        _machineStreamController.add(state.machine);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<Machine>(
-      stream: _machineStreamController.stream,
-      builder: (context, machineSnapshot) {
-        if (machineSnapshot.hasData) {
-          Machine machine = machineSnapshot.data!;
-          return StreamBuilder<Unit>(
-            stream: _unitsStreamController.stream,
-            builder: (context, unitSnapshot) {
-              if (unitSnapshot.hasData) {
-                Unit unit = unitSnapshot.data!;
-                return _buildPerformanceView(unit, machine);
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
-          );
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
-    );
-  }
 
   @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _lastUnitBloc = BlocProvider.of<LastUnitBloc>(context);
+    _lastUnitBloc.add(FetchLastUnit((widget.machine.id).toString()));
+    _timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
+      _lastUnitBloc.add(FetchLastUnit((widget.machine.id).toString()));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LastUnitBloc, LastUnitState>(
+        bloc: _lastUnitBloc,
+        builder: (context, state) {
+          if (state is LastUnitInitialState) {
+            return const CircularProgressIndicator();
+          } else if (state is LastUnitLoadingState) {
+            return const CircularProgressIndicator();
+          } else if (state is LastUnitLoadedState) {
+            Unit unit = state.unit;
+            return _buildPerformanceView(unit, widget.machine);
+          } else if (state is LastUnitErrorState) {
+            return const Text(
+                'Une erreur est survenue en récupérant les données');
+          } else {
+            return Text(state.toString());
+          }
+        });
   }
 
   Widget _buildPerformanceView(Unit unit, Machine machine) {

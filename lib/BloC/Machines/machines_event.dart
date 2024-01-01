@@ -7,6 +7,5 @@ abstract class MachinesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMachinesEvent extends MachinesEvent {}
 
 class FetchMachinesEvent extends MachinesEvent {}

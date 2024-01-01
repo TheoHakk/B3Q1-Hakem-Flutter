@@ -12,39 +12,8 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     on<FetchLastUnitsEvent>((event, emit) async {
       emit(UnitsLoadingState());
       try {
-        final List<Unit> units = await api.fetchLastUnits(event.machineId);
+        List<Unit> units = await api.fetchLastUnits(event.machineId);
         emit(UnitsLoadedState(units));
-      } catch (e) {
-        emit(UnitsErrorState(e.toString()));
-      }
-    });
-
-    on<FetchLastUnit>((event, emit) async {
-      emit(UnitsLoadingState());
-      try {
-        Unit unit = await api.fetchLastUnit(event.machineId);
-        emit(LastUnitLoadedState(unit));
-      } catch (e) {
-        print(e.toString());
-        emit(UnitsErrorState(e.toString()));
-      }
-    });
-
-    on<LoadLastUnitsEvent>((event, emit) async {
-      emit(UnitsLoadingState());
-      try {
-        final List<Unit> units = await api.fetchLastUnits(event.machineId);
-        emit(UnitsLoadedState(units));
-      } catch (e) {
-        emit(UnitsErrorState(e.toString()));
-      }
-    });
-
-    on<LoadLastUnit>((event, emit) async {
-      emit(UnitsLoadingState());
-      try {
-        final Unit unit = await api.fetchLastUnit(event.machineId);
-        emit(LastUnitLoadedState(unit));
       } catch (e) {
         emit(UnitsErrorState(e.toString()));
       }

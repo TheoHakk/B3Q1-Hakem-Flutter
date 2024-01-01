@@ -31,7 +31,7 @@ class _MachineSelection extends State<MachineSelection> {
 
     _loadUserData();
 
-    _machinesBloc.add(LoadMachinesEvent());
+    _machinesBloc.add(FetchMachinesEvent());
   }
 
   void _loadUserData() {
@@ -44,7 +44,7 @@ class _MachineSelection extends State<MachineSelection> {
   void didChangeDependencies() {
     //actualise the bloc when adding a machine, work also for the machine bloc
     super.didChangeDependencies();
-    _machinesBloc.add(LoadMachinesEvent());
+    _machinesBloc.add(FetchMachinesEvent());
   }
 
   @override
@@ -125,7 +125,7 @@ class _MachineSelection extends State<MachineSelection> {
                                 onTap: () async {
                                   await Navigator.pushNamed(context, '/add');
                                   BlocProvider.of<MachinesBloc>(context)
-                                      .add(LoadMachinesEvent());
+                                      .add(FetchMachinesEvent());
                                 },
                               ),
                             ],
@@ -135,8 +135,6 @@ class _MachineSelection extends State<MachineSelection> {
               ),
             ),
 
-            //Construct a bloc builder with the machinesBloc and machinesState
-            //to load the machines
 
             body: Center(
               child: Column(

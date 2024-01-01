@@ -34,12 +34,14 @@ class _FormMachine extends State<FormMachine> {
               _goalController.text,
               _dataDelayController.text,
               _nameController.text));
-        } else {
+        } else if (widget.machineId != null) {
           BlocProvider.of<MachineBloc>(context).add(UpdateMachineEvent(
               widget.machineId!,
               _goalController.text,
               _dataDelayController.text,
               _nameController.text));
+        } else {
+          throw Exception("Invalid machine id");
         }
       } catch (e) {
         SnackBar snackBar = SnackBar(content: Text(e.toString()));
@@ -55,7 +57,7 @@ class _FormMachine extends State<FormMachine> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.title),
+            '${widget.title} machine ${widget.machineId ?? ""}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,7 +75,7 @@ class _FormMachine extends State<FormMachine> {
               TextFormField(
                 controller: _goalController,
                 decoration:
-                const InputDecoration(labelText: 'Production Goal'),
+                const InputDecoration(labelText: 'Production Goal for a minute'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {

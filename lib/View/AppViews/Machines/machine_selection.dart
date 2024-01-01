@@ -124,7 +124,8 @@ class _MachineSelection extends State<MachineSelection> {
                                 title: const Text('Add a machine'),
                                 onTap: () async {
                                   await Navigator.pushNamed(context, '/add');
-                                  _machinesBloc.add(LoadMachinesEvent());
+                                  BlocProvider.of<MachinesBloc>(context)
+                                      .add(LoadMachinesEvent());
                                 },
                               ),
                             ],

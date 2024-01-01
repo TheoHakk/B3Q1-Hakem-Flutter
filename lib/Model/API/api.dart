@@ -72,13 +72,21 @@ class Api {
   }
 
   updateMachine(String id, String productionGoal, String sendingTime, String name) {
+    print("update machine");
+    print(id);
     int testId = int.parse(id);
+    print(testId);
 
-    http.put(Uri.parse('$baseUrl/UpdateMachine'), body: {
-      'Id': id,
-      'ProductionGoal': productionGoal,
-      'SendingTime': sendingTime,
-      'Name': name
-    });
+    //I've to use post instead of put because it doesn't work with put
+    http.post(
+      Uri.parse('$baseUrl/UpdateMachine'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'Id': id,
+        'ProductionGoal': productionGoal,
+        'SendingTime': sendingTime,
+        'Name': name
+      }),
+    );
   }
 }

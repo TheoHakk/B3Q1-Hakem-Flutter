@@ -4,6 +4,10 @@ import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performan
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../BloC/Machine/machine_bloc.dart';
+import '../../../BloC/Machine/machine_event.dart';
+import '../../../BloC/Machines/machines_bloc.dart';
+import '../../../BloC/Machines/machines_event.dart';
 import '../../../BloC/User/user_bloc.dart';
 import '../../../BloC/User/user_event.dart';
 import '../../../BloC/User/user_state.dart';
@@ -120,7 +124,11 @@ class _MachineDetail extends State<MachineDetail> {
                                 leading: const Icon(Icons.edit),
                                 title: const Text('Update a machine'),
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/update');
+                                  Navigator.pushNamed(context, '/update/${widget.id}');
+                                  BlocProvider.of<MachinesBloc>(context)
+                                      .add(LoadMachinesEvent());
+                                  BlocProvider.of<MachineBloc>(context)
+                                      .add(LoadMachineEvent(widget.id));
                                 },
                               ),
                               ListTile(

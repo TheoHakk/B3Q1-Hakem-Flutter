@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../BloC/Machine/machine_bloc.dart';
 import '../../../BloC/Machine/machine_event.dart';
 import '../../../BloC/Machine/machine_state.dart';
+import '../../../BloC/Machines/machines_bloc.dart';
+import '../../../BloC/Machines/machines_event.dart';
 import '../../../BloC/User/user_bloc.dart';
 import '../../../BloC/User/user_event.dart';
 import '../../../BloC/User/user_state.dart';
@@ -145,15 +147,18 @@ class _MachineDetail extends State<MachineDetail> {
                                     onTap: () async {
                                       await Navigator.pushNamed(
                                           context, '/update/${widget.id}');
-                                      _machineBloc.add(
-                                          FetchMachineEvent(widget.id));
+                                      _machineBloc
+                                          .add(FetchMachineEvent(widget.id));
                                     },
                                   ),
                                   ListTile(
                                     leading: const Icon(Icons.add),
                                     title: const Text('Add a machine'),
-                                    onTap: () {
-                                      Navigator.pushNamed(context, '/add');
+                                    onTap: () async {
+                                      await Navigator.pushNamed(
+                                          context, '/add');
+                                      BlocProvider.of<MachinesBloc>(context)
+                                          .add(FetchMachinesEvent());
                                     },
                                   ),
                                   ListTile(
@@ -173,7 +178,13 @@ class _MachineDetail extends State<MachineDetail> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              Navigator.pop(context);
+                                              BlocProvider.of<MachineBloc>(
+                                                      context)
+                                                  .add(DeleteMachineEvent(
+                                                      widget.id));
+                                              BlocProvider.of<MachinesBloc>(context)
+                                                  .add(FetchMachinesEvent());
+                                              Navigator.pushNamedAndRemoveUntil(context, "/machineSelection", (route) => false);
                                             },
                                             child: const Text("Delete"),
                                           ),
@@ -204,7 +215,7 @@ class _MachineDetail extends State<MachineDetail> {
                         if (selectedView == Views.performance)
                           Performance(machine: machine),
                         if (selectedView == Views.chart)
-                          Chart(machine:machine),
+                          Chart(machine: machine),
                         if (selectedView == Views.all)
                           GroupedInformations(machine: machine),
                         const SizedBox(height: 30),

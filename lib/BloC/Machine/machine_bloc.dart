@@ -35,5 +35,13 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
         throw Exception('Failed to update machine');
       }
     });
+
+    on<DeleteMachineEvent>((event, emit) async {
+      try {
+        await api.deleteMachine(event.id);
+      } catch (e) {
+        throw Exception('Failed to delete machine');
+      }
+    });
   }
 }

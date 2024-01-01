@@ -82,4 +82,9 @@ class Api {
       }),
     );
   }
+
+  deleteMachine(String id) {
+    int testId = int.parse(id);
+    http.get(Uri.parse('$baseUrl/DeleteMachine?machineId=$id'));
+  }
 }

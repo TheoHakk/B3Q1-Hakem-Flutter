@@ -38,3 +38,12 @@ class UpdateMachineEvent extends MachineEvent {
   @override
   List<Object> get props => [id, productionGoal, sendingTime, name];
 }
+
+class DeleteMachineEvent extends MachineEvent {
+  final String id;
+
+  const DeleteMachineEvent(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

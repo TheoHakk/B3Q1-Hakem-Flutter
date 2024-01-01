@@ -11,7 +11,6 @@ import '../../../BloC/Machine/machine_bloc.dart';
 import '../../../BloC/Machine/machine_event.dart';
 import '../../../BloC/Machine/machine_state.dart';
 import '../../../BloC/Units/units_state.dart';
-import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
 
 class Chart extends StatefulWidget {
@@ -33,8 +32,8 @@ class ChartState extends State<Chart> {
   late UnitsBloc _unitsBloc;
   late MachineBloc _machineBloc;
 
-  final BehaviorSubject<List<Unit>> _unitsStreamController = BehaviorSubject<
-      List<Unit>>();
+  final BehaviorSubject<List<Unit>> _unitsStreamController =
+      BehaviorSubject<List<Unit>>();
 
   @override
   void initState() {
@@ -45,8 +44,7 @@ class ChartState extends State<Chart> {
     _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
     _machineBloc.add(LoadMachineEvent(widget.machineId));
 
-
-    void fetchData(){
+    void fetchData() {
       _unitsBloc.add(FetchLastUnitsEvent(widget.machineId));
       _machineBloc.add(LoadMachineEvent(widget.machineId));
     }
@@ -64,13 +62,10 @@ class ChartState extends State<Chart> {
 
     _machineBloc.stream.listen((state) {
       if (state is MachineLoadedState) {
-        setState(() {
-          objectif = ((state.machine.productionGoal)/(60000/state.machine.sendingTime));
-          print(objectif);
-        });
+        objectif = ((state.machine.productionGoal) /
+            (60000 / state.machine.sendingTime));
       }
     });
-
   }
 
   @override
@@ -127,10 +122,10 @@ class ChartState extends State<Chart> {
                         getTitlesWidget: (value, meta) => leftTitles(value),
                       ),
                     ),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(
-                        showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(
-                        showTitles: false)),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
                   ),
                   borderData: FlBorderData(show: false),
                   groupsSpace: barsSpace,
@@ -159,8 +154,7 @@ class ChartState extends State<Chart> {
     String text;
     if (value.toInt() < units.length) {
       text =
-      '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value
-          .toInt()].second}\n with : ${units[value.toInt()].nbUnits}';
+          '${units[value.toInt()].hour}:${units[value.toInt()].minute}:${units[value.toInt()].second}\n with : ${units[value.toInt()].nbUnits}';
     } else {
       text = '';
     }
@@ -182,7 +176,12 @@ class ChartState extends State<Chart> {
           BarChartRodData(
             toY: unitValue,
             rodStackItems: [
-              BarChartRodStackItem(0, unitValue, unitValue >= objectif.toDouble() ? widget.light : widget.dark),
+              BarChartRodStackItem(
+                  0,
+                  unitValue,
+                  unitValue >= objectif.toDouble()
+                      ? widget.light
+                      : widget.dark),
             ],
             borderRadius: BorderRadius.zero,
             width: barsWidth,

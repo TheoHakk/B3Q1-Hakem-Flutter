@@ -5,9 +5,12 @@ import '../Machine/machine.dart';
 import '../Unit/unit.dart';
 
 class Api {
-  final String baseUrl = 'http://10.0.70.50:3002';
+  final String baseUrl = 'http://localhost:3002';
 
   Future<List<Unit>> fetchLastUnits(String machineId) async {
+    //simple test for the machineId, control if it's an int
+    int testId = int.parse(machineId);
+
     //Return a list of the ten last units
     final response =
         await http.get(Uri.parse('$baseUrl/LastUnits?machineId=$machineId'));
@@ -21,6 +24,8 @@ class Api {
   }
 
   Future<Unit> fetchLastUnit(String machineId) async {
+    int testId = int.parse(machineId);
+
     final response =
         await http.get(Uri.parse('$baseUrl/LastUnit?machineId=$machineId'));
 
@@ -42,7 +47,9 @@ class Api {
   }
 
   Future<Machine> fetchMachine(String id) async {
-    print(id);
+
+    int testId = int.parse(id);
+
     final response =
         await http.get(Uri.parse('$baseUrl/Machine?machineId=$id'));
     if (response.statusCode == 200) {
@@ -50,5 +57,28 @@ class Api {
     } else {
       throw Exception('Failed to load machine');
     }
+  }
+
+  createMachine(String productionGoal, String sendingTime, String name) async {
+    http.post(
+      Uri.parse('$baseUrl/NewMachine'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'ProductionGoal': productionGoal,
+        'SendingTime': sendingTime,
+        'Name': name
+      }),
+    );
+  }
+
+  updateMachine(String id, String productionGoal, String sendingTime, String name) {
+    int testId = int.parse(id);
+
+    http.put(Uri.parse('$baseUrl/UpdateMachine'), body: {
+      'Id': id,
+      'ProductionGoal': productionGoal,
+      'SendingTime': sendingTime,
+      'Name': name
+    });
   }
 }

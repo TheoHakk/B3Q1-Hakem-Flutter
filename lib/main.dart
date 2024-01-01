@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'BloC/User/user_bloc.dart';
+import 'BloC/User/user_state.dart';
 import 'Firebase/Configuration/firebase_options.dart';
 import 'Firebase/Repositories/firebase_user_repository.dart';
 import 'Firebase/Repositories/user_repository.dart';
@@ -22,13 +23,16 @@ void main() async {
   );
 
   UserRepository userRepository = FirebaseUserRepository();
-  runApp(MyApp(userRepository: userRepository));
+  UserBloc userBloc = UserBloc(userRepository: userRepository);
+
+  runApp(MyApp(userRepository: userRepository, userBloc: userBloc,));
 }
 
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
+  final UserBloc userBloc;
 
-  const MyApp({super.key, required this.userRepository});
+  const MyApp({super.key, required this.userRepository, required this.userBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +41,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<MachinesBloc>(create: (context) => MachinesBloc()),
         BlocProvider<MachineBloc>(create: (context) => MachineBloc()),
         BlocProvider<UnitsBloc>(create: (context) => UnitsBloc()),
-        BlocProvider<UserBloc>(
-            create: (context) => UserBloc(userRepository: userRepository)),
+        BlocProvider<UserBloc>.value(value: userBloc),
       ],
       child: MaterialApp(
         title: 'Performance counter',
@@ -52,33 +55,50 @@ class MyApp extends StatelessWidget {
           var path = settings.name?.split('/');
           String? id = (path!.length > 2) ? path[2] : null;
 
+          var userBloc = this.userBloc;
+
           switch (path[1]) {
             case 'login':
               return MaterialPageRoute(
                   //we add the settings to the route, for actualize the url in the browser
                   settings: settings,
-                  builder: (context) =>
-                      const LoginPage());
+                  builder: (context) => const LoginPage());
             case 'machineSelection':
               return MaterialPageRoute(
                   settings: settings,
-                  builder: (context) =>
-                      const MachineSelection());
+                  builder: (context) => const MachineSelection());
             case 'machineDetail':
               return MaterialPageRoute(
                   settings: settings,
-                  builder: (context) => MachineDetail(
-                      id: id.toString()));
+                  builder: (context) => MachineDetail(id: id.toString()));
             case 'update':
-              return MaterialPageRoute(
-                  settings: settings,
-                  builder: (context) =>
-                      FormMachine(title: "update", machineId: id));
+              if (userBloc.state is UserLoadedState &&
+                  (userBloc.state as UserLoadedState).user.logged) {
+                //verify if the user is connected
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (context) =>
+                        FormMachine(title: "update", machineId: id));
+              } else {
+                //if not, redirect to the login page
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (context) => const LoginPage());
+              }
             case 'add':
-              return MaterialPageRoute(
-                  settings: settings,
-                  builder: (context) =>
-                      FormMachine(title: "add", machineId: id));
+              if (userBloc.state is UserLoadedState &&
+                  (userBloc.state as UserLoadedState).user.logged) {
+                //verify if the user is connected
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (context) =>
+                        const FormMachine(title: "add", machineId: null));
+              } else {
+                //if not, redirect to the login page
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (context) => const LoginPage());
+              }
             default:
               return MaterialPageRoute(
                   settings: settings,

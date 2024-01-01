@@ -95,8 +95,6 @@ class _Performance extends State<Performance> {
   @override
   void dispose() {
     _timer?.cancel();
-    _unitsStreamController.close();
-    _machineStreamController.close();
     super.dispose();
   }
 

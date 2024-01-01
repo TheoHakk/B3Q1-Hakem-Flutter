@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../BloC/Machines/machines_bloc.dart';
@@ -6,7 +8,6 @@ import '../../../BloC/Machines/machines_state.dart';
 import '../../../BloC/User/user_bloc.dart';
 import '../../../BloC/User/user_event.dart';
 import '../../../BloC/User/user_state.dart';
-import '../../../Model/Machine/machine.dart';
 import '../../../Model/User/user.dart';
 
 class MachineSelection extends StatefulWidget {
@@ -18,15 +19,19 @@ class MachineSelection extends StatefulWidget {
 
 class _MachineSelection extends State<MachineSelection> {
   late UserBloc _userBloc;
+  late MachinesBloc _machinesBloc;
   User? currentUser;
-  late List<Machine> machines;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _userBloc = BlocProvider.of<UserBloc>(context);
+    _machinesBloc = BlocProvider.of<MachinesBloc>(context);
+
     _loadUserData();
-    BlocProvider.of<MachinesBloc>(context).add(LoadMachinesEvent());
+
+    _machinesBloc.add(LoadMachinesEvent());
   }
 
   void _loadUserData() {
@@ -35,6 +40,14 @@ class _MachineSelection extends State<MachineSelection> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    //actualise the bloc when adding a machine
+    super.didChangeDependencies();
+    _machinesBloc.add(LoadMachinesEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
         bloc: _userBloc,
@@ -106,10 +119,12 @@ class _MachineSelection extends State<MachineSelection> {
                                 },
                               ),
                               ListTile(
+                                //permit to add a machine, and reload the list
                                 leading: const Icon(Icons.add),
                                 title: const Text('Add a machine'),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/add');
+                                onTap: () async {
+                                  await Navigator.pushNamed(context, '/add');
+                                  _machinesBloc.add(LoadMachinesEvent());
                                 },
                               ),
                             ],

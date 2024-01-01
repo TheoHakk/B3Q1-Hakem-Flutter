@@ -27,5 +27,23 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
         emit(MachineErrorState(e.toString()));
       }
     });
+
+    on<CreateMachineEvent>((event, emit) async {
+      try {
+        await api.createMachine(
+            event.productionGoal, event.sendingTime, event.name);
+      } catch (e) {
+        throw Exception('Failed to create machine');
+      }
+    });
+
+    on<UpdateMachineEvent>((event, emit) async {
+      try {
+        await api.updateMachine(
+            event.id, event.productionGoal, event.sendingTime, event.name);
+      } catch (e) {
+        throw Exception('Failed to update machine');
+      }
+    });
   }
 }

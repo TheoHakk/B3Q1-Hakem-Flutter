@@ -5,7 +5,7 @@ import '../Machine/machine.dart';
 import '../Unit/unit.dart';
 
 class Api {
-  final String baseUrl = 'http://localhost:3002';
+  final String baseUrl = 'http://10.0.70.50:3002';
 
   Future<List<Unit>> fetchLastUnits(String machineId) async {
     //simple test for the machineId, control if it's an int

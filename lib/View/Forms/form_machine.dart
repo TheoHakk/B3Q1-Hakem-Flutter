@@ -22,18 +22,11 @@ class _FormMachine extends State<FormMachine> {
 
   void validateForm() {
     if (_formKey.currentState!.validate()) {
-
       try {
         int.parse(_goalController.text);
         int.parse(_dataDelayController.text);
-        _delayTime = (int.parse(_dataDelayController.text)*1000);
-      } catch (e) {
-        SnackBar snackBar = SnackBar(content: Text(e.toString()));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        return;
-      }
+        _delayTime = (int.parse(_dataDelayController.text) * 1000);
 
-      try {
         if (widget.machineId == null) {
           BlocProvider.of<MachineBloc>(context).add(CreateMachineEvent(
               _goalController.text,
@@ -61,8 +54,7 @@ class _FormMachine extends State<FormMachine> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            '${widget.title} machine ${widget.machineId ?? ""}'),
+        title: Text('${widget.title} machine ${widget.machineId ?? ""}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -71,51 +63,42 @@ class _FormMachine extends State<FormMachine> {
           child: Column(
             children: [
               TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) =>
-                value!.isEmpty ? 'Please enter a name' : null,
-                onFieldSubmitted: (_) => validateForm(),
-              ),
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter a name' : null),
               TextFormField(
-                controller: _goalController,
-                decoration:
-                const InputDecoration(labelText: 'Production Goal for a minute'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a production goal';
-                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) => validateForm(),
-              ),
+                  controller: _goalController,
+                  decoration: const InputDecoration(
+                      labelText: 'Production Goal for a minute'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a production goal';
+                    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  }),
               TextFormField(
-                controller: _dataDelayController,
-                decoration: const InputDecoration(
-                    labelText: 'Time before sending data in second'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a delay for the data';
-                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Please enter a valid number';
-                  }
-                  if(int.parse(value) > 1000){
-                    return 'The delay must be less than 1000 seconds';
-                  }
-                  if(int.parse(value) < 1){
-                    return 'The delay must be greater than 1 second';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (value) {
-                  value *= 1000;
-                  validateForm();
-                },
-              ),
+                  controller: _dataDelayController,
+                  decoration: const InputDecoration(
+                      labelText: 'Time before sending data in second'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a delay for the data';
+                    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Please enter a valid number';
+                    }
+                    if (int.parse(value) > 1000) {
+                      return 'The delay must be less than 1000 seconds';
+                    }
+                    if (int.parse(value) < 1) {
+                      return 'The delay must be greater than 1 second';
+                    }
+                    return null;
+                  }),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: validateForm,

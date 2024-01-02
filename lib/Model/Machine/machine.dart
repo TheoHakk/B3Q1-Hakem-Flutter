@@ -4,7 +4,32 @@ class Machine {
   final int sendingTime;
   final String name;
 
-  Machine({required this.id, required this.productionGoal, required this.sendingTime, required this.name});
+  int totalProd = 0;
+  double averageProdDay = 0;
+  double averageProdHour = 0;
+  String startHour = "";
+
+  Machine(
+      {required this.id,
+      required this.productionGoal,
+      required this.sendingTime,
+      required this.name});
+
+  void setTotalProd(int totalProd) {
+    this.totalProd = totalProd;
+  }
+
+  void setAverageProdDay(double averageProdDay) {
+    this.averageProdDay = averageProdDay;
+  }
+
+  void setAverageProdHour(double averageProdHour) {
+    this.averageProdHour = averageProdHour;
+  }
+
+  void setStartHour(String startHour) {
+    this.startHour = startHour;
+  }
 
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
@@ -16,9 +41,9 @@ class Machine {
   }
 
   Map<String, dynamic> toJson() => {
-    'Id': id,
-    'Name': name,
-    'ProductionGoal': productionGoal,
-    'SendingTime': sendingTime,
-  };
+        'Id': id,
+        'Name': name,
+        'ProductionGoal': productionGoal,
+        'SendingTime': sendingTime,
+      };
 }

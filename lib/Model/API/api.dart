@@ -68,7 +68,8 @@ class Api {
     );
   }
 
-  updateMachine(String id, String productionGoal, String sendingTime, String name) {
+  updateMachine(
+      String id, String productionGoal, String sendingTime, String name) {
     int testId = int.parse(id);
     //I've to use post instead of put because it doesn't work with put
     http.post(
@@ -86,5 +87,56 @@ class Api {
   deleteMachine(String id) {
     int testId = int.parse(id);
     http.get(Uri.parse('$baseUrl/DeleteMachine?machineId=$id'));
+  }
+
+  Future<int> fetchTotalProd(String id) async {
+    int testId = int.parse(id);
+    final response =
+        await http.get(Uri.parse('$baseUrl/TotalProduction?machineId=$id'));
+
+    if (response.statusCode == 200) {
+      return int.parse(response.body);
+    } else {
+      throw Exception('Failed to load total prod');
+    }
+  }
+
+
+  Future<double> fetchAverageProdDay(String id) async {
+    int testId = int.parse(id);
+    final response =
+    await http.get(Uri.parse('$baseUrl/AverageProdDay?machineId=$id'));
+
+    if (response.statusCode == 200) {
+      double averageProdDay = double.parse(response.body);
+      return double.parse(averageProdDay.toStringAsFixed(2));
+    } else {
+      throw Exception('Failed to load average prod day');
+    }
+  }
+
+  Future<double> fetchAverageProdHour(String id) async {
+    int testId = int.parse(id);
+    final response =
+        await http.get(Uri.parse('$baseUrl/AverageProdHour?machineId=$id'));
+
+    if (response.statusCode == 200) {
+      double averageProdDay = double.parse(response.body);
+      return double.parse(averageProdDay.toStringAsFixed(2));
+    } else {
+      throw Exception('Failed to load average prod hour');
+    }
+  }
+
+  Future<String> fetchStartHour(String id) async {
+    int testId = int.parse(id);
+    final response =
+        await http.get(Uri.parse('$baseUrl/StartHour?machineId=$id'));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load average prod hour');
+    }
   }
 }

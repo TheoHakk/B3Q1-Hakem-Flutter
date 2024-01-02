@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Chart/chart.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Group/grouped_informations.dart';
 import 'package:b3q1_hakem_projet_flutter/View/Performance/Performance/performance.dart';
@@ -36,6 +38,9 @@ class _MachineDetail extends State<MachineDetail> {
   bool loaded = false;
   User? currentUser;
 
+  late Timer timer;
+  late int duration = 30;
+
   @override
   void initState() {
     super.initState();
@@ -45,12 +50,22 @@ class _MachineDetail extends State<MachineDetail> {
     }
     _machineBloc = BlocProvider.of<MachineBloc>(context);
     _machineBloc.add(FetchMachineEvent(widget.id));
+
+    timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
+      _machineBloc.add(FetchMachineEvent(widget.id));
+    });
   }
 
   void setView(Views view) {
     setState(() {
       selectedView = view;
     });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -78,8 +93,14 @@ class _MachineDetail extends State<MachineDetail> {
                 return const CircularProgressIndicator();
               } else if (state is MachineLoadedState) {
                 machine = state.machine;
+                duration = machine.sendingTime / 1000 as int;
+                print(duration);
+                timer.cancel();
+                timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
+                  _machineBloc.add(FetchMachineEvent(widget.id));
+                });
               } else if (state is MachineErrorState) {
-                return const Text('Une erreur est survenue');
+                return const CircularProgressIndicator();
               }
               return Scaffold(
                 appBar: AppBar(
@@ -182,9 +203,13 @@ class _MachineDetail extends State<MachineDetail> {
                                                       context)
                                                   .add(DeleteMachineEvent(
                                                       widget.id));
-                                              BlocProvider.of<MachinesBloc>(context)
+                                              BlocProvider.of<MachinesBloc>(
+                                                      context)
                                                   .add(FetchMachinesEvent());
-                                              Navigator.pushNamedAndRemoveUntil(context, "/machineSelection", (route) => false);
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  "/machineSelection",
+                                                  (route) => false);
                                             },
                                             child: const Text("Delete"),
                                           ),

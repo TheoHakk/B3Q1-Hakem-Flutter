@@ -12,6 +12,10 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
       emit(MachineLoadingState());
       try {
         final Machine machine = await api.fetchMachine(event.id);
+        machine.setTotalProd(await api.fetchTotalProd(event.id));
+        machine.setAverageProdDay(await api.fetchAverageProdDay(event.id));
+        machine.setAverageProdHour(await api.fetchAverageProdHour(event.id));
+        machine.setStartHour(await api.fetchStartHour(event.id));
         emit(MachineLoadedState(machine));
       } catch (e) {
         emit(MachineErrorState(e.toString()));

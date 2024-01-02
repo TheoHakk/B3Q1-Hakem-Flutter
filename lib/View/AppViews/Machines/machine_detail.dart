@@ -17,6 +17,7 @@ import '../../../BloC/User/user_state.dart';
 import '../../../Model/Machine/machine.dart';
 import '../../../Model/User/user.dart';
 import '../../Performance/Stats/statistics.dart';
+import '../Loading/loading.dart';
 
 enum Views { textual, performance, chart, all }
 
@@ -69,6 +70,14 @@ class _MachineDetail extends State<MachineDetail> {
   }
 
   @override
+  void didChangeDependencies() {
+    //actualise the bloc when adding a machine, work also for the machine bloc
+    super.didChangeDependencies();
+    _machineBloc.add(FetchMachineEvent(widget.id));
+    BlocProvider.of<MachinesBloc>(context).add(FetchMachinesEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
         bloc: _userBloc,
@@ -88,13 +97,9 @@ class _MachineDetail extends State<MachineDetail> {
             },
             builder: (context, state) {
               if (state is MachineInitialState) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Loading();
               } else if (state is MachineLoadingState) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Loading();
               } else if (state is MachineLoadedState) {
                 machine = state.machine;
                 duration = machine.sendingTime / 1000 as int;
@@ -103,9 +108,7 @@ class _MachineDetail extends State<MachineDetail> {
                   _machineBloc.add(FetchMachineEvent(widget.id));
                 });
               } else if (state is MachineErrorState) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Loading();
               }
               return Scaffold(
                 appBar: AppBar(
@@ -123,6 +126,7 @@ class _MachineDetail extends State<MachineDetail> {
                     ),
                   ),
                 ),
+                //#region Drawer
                 endDrawer: Drawer(
                   child: ListView(
                     padding: EdgeInsets.zero,
@@ -173,7 +177,7 @@ class _MachineDetail extends State<MachineDetail> {
                                     onTap: () async {
                                       await Navigator.pushNamed(
                                           context, '/update/${widget.id}');
-                                      _machineBloc
+                                      BlocProvider.of<MachineBloc>(context)
                                           .add(FetchMachineEvent(widget.id));
                                     },
                                   ),
@@ -234,6 +238,8 @@ class _MachineDetail extends State<MachineDetail> {
                     ],
                   ),
                 ),
+                //#endregion
+                //#region Main body, with the different views
                 body: Center(
                   child: SingleChildScrollView(
                     child: Column(
@@ -253,6 +259,8 @@ class _MachineDetail extends State<MachineDetail> {
                     ),
                   ),
                 ),
+                //#endregion
+                //#region BottomNavigationBar
                 bottomNavigationBar: BottomAppBar(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -321,6 +329,7 @@ class _MachineDetail extends State<MachineDetail> {
                     ],
                   ),
                 ),
+                //#endregion
               );
             },
           );

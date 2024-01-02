@@ -11,11 +11,11 @@ import '../../../BloC/Units/units_event.dart';
 import '../../../BloC/Units/units_state.dart';
 import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
+import '../../AppViews/Loading/loading.dart';
 
 class Performance extends StatefulWidget {
-  const Performance({super.key, required this.machine});
-
   final Machine machine;
+  const Performance({super.key, required this.machine});
 
   @override
   State<Performance> createState() => _Performance();
@@ -54,13 +54,9 @@ class _Performance extends State<Performance> {
         bloc: _lastUnitBloc,
         builder: (context, state) {
           if (state is LastUnitInitialState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loading();
           } else if (state is LastUnitLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loading();
           } else if (state is LastUnitLoadedState) {
             Unit unit = state.unit;
             return _buildPerformanceView(unit, goal);
@@ -144,3 +140,5 @@ class _Performance extends State<Performance> {
     );
   }
 }
+
+

@@ -11,6 +11,7 @@ class MachineBloc extends Bloc<MachineEvent, MachineState> {
     on<FetchMachineEvent>((event, emit) async {
       emit(MachineLoadingState());
       try {
+        //Fetch machine, not optimized, but will be changed if the project is continued
         final Machine machine = await api.fetchMachine(event.id);
         machine.setTotalProd(await api.fetchTotalProd(event.id));
         machine.setAverageProdDay(await api.fetchAverageProdDay(event.id));

@@ -9,6 +9,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : super(UserInitialState()) {
 
     on<UserLoginEvent>((event, emit) async {
+      //Launching connection to firebase
       emit(UserLoadingState());
       try {
         await userRepository.signIn(event.email, event.password);
@@ -24,6 +25,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     on<FetchUserEvent>((event, emit) async {
+      //Get user from firebase
       emit(UserLoadingState());
       try {
         if (await userRepository.getUser() == "") {

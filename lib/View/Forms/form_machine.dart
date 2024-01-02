@@ -4,10 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../BloC/Machine/machine_event.dart';
 
 class FormMachine extends StatefulWidget {
-  const FormMachine({super.key, required this.title, required this.machineId});
-
   final String title;
   final String? machineId;
+  const FormMachine({super.key, required this.title, required this.machineId});
 
   @override
   State<FormMachine> createState() => _FormMachine();
@@ -62,6 +61,7 @@ class _FormMachine extends State<FormMachine> {
           key: _formKey,
           child: Column(
             children: [
+              //#region Form text fields
               TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(labelText: 'Name'),
@@ -99,6 +99,7 @@ class _FormMachine extends State<FormMachine> {
                     }
                     return null;
                   }),
+              //#endregion
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: validateForm,

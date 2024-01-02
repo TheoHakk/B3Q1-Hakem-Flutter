@@ -7,9 +7,7 @@ import '../Stats/statistics.dart';
 
 class GroupedInformations extends StatefulWidget {
   final Machine machine;
-
   const GroupedInformations({super.key, required this.machine});
-
 
   @override
   State<GroupedInformations> createState() => _GroupedInformations();
@@ -20,6 +18,7 @@ class _GroupedInformations extends State<GroupedInformations> {
   build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return LayoutBuilder(builder: (context, constraints) {
+      //#region Responsive
       if (constraints.maxWidth < 750) {
         return SingleChildScrollView(
           child: Column(
@@ -40,6 +39,7 @@ class _GroupedInformations extends State<GroupedInformations> {
           ),
         );
       }
+      //#endregion
       return Center(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

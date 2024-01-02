@@ -21,7 +21,6 @@ class _MachineSelection extends State<MachineSelection> {
   late UserBloc _userBloc;
   late MachinesBloc _machinesBloc;
   User? currentUser;
-  Timer? _timer;
 
   @override
   void initState() {
@@ -74,6 +73,7 @@ class _MachineSelection extends State<MachineSelection> {
                 ),
               ),
             ),
+            //#region Drawer
             endDrawer: Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -124,6 +124,7 @@ class _MachineSelection extends State<MachineSelection> {
                                 title: const Text('Add a machine'),
                                 onTap: () async {
                                   await Navigator.pushNamed(context, '/add');
+                                  //reload the bloc
                                   BlocProvider.of<MachinesBloc>(context)
                                       .add(FetchMachinesEvent());
                                 },
@@ -134,8 +135,8 @@ class _MachineSelection extends State<MachineSelection> {
                 ],
               ),
             ),
-
-
+            //#endregion
+            //#region List of machines
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,6 +181,7 @@ class _MachineSelection extends State<MachineSelection> {
                 ],
               ),
             ),
+            //#endregion
           );
         });
   }

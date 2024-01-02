@@ -9,11 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../BloC/Units/units_state.dart';
 import '../../../Model/Machine/machine.dart';
 import '../../../Model/Unit/unit.dart';
+import '../../AppViews/Loading/loading.dart';
 
 class Chart extends StatefulWidget {
   final Color dark = Colors.redAccent;
   final Color light = Colors.greenAccent;
-
   final Machine machine;
 
   const Chart({super.key, required this.machine});
@@ -55,18 +55,14 @@ class ChartState extends State<Chart> {
         bloc: _unitsBloc,
         builder: (context, state) {
           if (state is UnitsLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loading();
           } else if (state is UnitsLoadedState) {
             units = state.units;
             return buildChart();
           } else if (state is UnitsErrorState) {
             return const Text('Une erreur est survenue');
           }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Loading();
         });
   }
 

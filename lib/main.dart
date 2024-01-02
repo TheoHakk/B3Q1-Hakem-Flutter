@@ -26,18 +26,23 @@ void main() async {
   UserRepository userRepository = FirebaseUserRepository();
   UserBloc userBloc = UserBloc(userRepository: userRepository);
 
-  runApp(MyApp(userRepository: userRepository, userBloc: userBloc,));
+  runApp(MyApp(
+    userRepository: userRepository,
+    userBloc: userBloc,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
   final UserBloc userBloc;
 
-  const MyApp({super.key, required this.userRepository, required this.userBloc});
+  const MyApp(
+      {super.key, required this.userRepository, required this.userBloc});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
+      //#region BlocProviders
       providers: [
         BlocProvider<MachinesBloc>(create: (context) => MachinesBloc()),
         BlocProvider<MachineBloc>(create: (context) => MachineBloc()),
@@ -45,13 +50,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserBloc>.value(value: userBloc),
         BlocProvider<LastUnitBloc>(create: (context) => LastUnitBloc()),
       ],
+      //#endregion
       child: MaterialApp(
         title: 'Performance counter',
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
         debugShowCheckedModeBanner: false,
         initialRoute: '/login',
+        //#region Routes
         onGenerateRoute: (settings) {
           //Extract id from the path
           var path = settings.name?.split('/');
@@ -107,6 +111,7 @@ class MyApp extends StatelessWidget {
                   builder: (context) => const NotFoundPage());
           }
         },
+        //#endregion
       ),
     );
   }

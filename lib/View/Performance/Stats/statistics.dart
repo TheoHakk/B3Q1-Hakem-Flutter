@@ -1,50 +1,33 @@
 import 'package:flutter/material.dart';
 import '../../../Model/Machine/machine.dart';
 
-class Statistics extends StatefulWidget {
+class Statistics extends StatelessWidget {
   final Machine machine;
 
   const Statistics({super.key, required this.machine});
 
-  @override
-  State<Statistics> createState() => _Statistics();
-}
-
-class _Statistics extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Text("Statistics",
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline)),
-            Text("Machine identifier: ${widget.machine.id}",
-                style: const TextStyle(fontSize: 25)),
-            Text("Machine name: ${widget.machine.name}",
-                style: const TextStyle(fontSize: 25)),
-            Text(
-                "Average minute production goal: ${widget.machine.productionGoal}",
-                style: const TextStyle(fontSize: 25)),
-            Text(
-                "Time before sending data: ${(widget.machine.sendingTime) / 1000} seconds",
-                style: const TextStyle(fontSize: 25)),
-            Text("Total production: ${(widget.machine.totalProd).toString()}",
-                style: const TextStyle(fontSize: 25)),
-            Text(
-                "Average daily production:  ${(widget.machine.averageProdDay).toString()} /minute",
-                style: const TextStyle(fontSize: 25)),
-            Text(
-                "Average hour production:  ${(widget.machine.averageProdHour).toString()}/minute",
-                style: const TextStyle(fontSize: 25)),
-            Text("Start hour:  ${widget.machine.startHour}",
-                style: const TextStyle(fontSize: 25)),
+            buildText("Statistics", 30, FontWeight.bold, TextDecoration.underline),
+            buildText("Machine identifier: ${machine.id}", 25),
+            buildText("Machine name: ${machine.name}", 25),
+            buildText("Average minute production goal: ${machine.productionGoal}", 25),
+            buildText("Time before sending data: ${(machine.sendingTime) / 1000} seconds", 25),
+            buildText("Total production: ${(machine.totalProd).toString()}", 25),
+            buildText("Average daily production:  ${(machine.averageProdDay).toString()} /minute", 25),
+            buildText("Average hour production:  ${(machine.averageProdHour).toString()}/minute", 25),
+            buildText("Start hour:  ${machine.startHour}", 25),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildText(String data, double fontSize, [FontWeight fontWeight = FontWeight.normal, TextDecoration decoration = TextDecoration.none]) {
+    return Text(data, style: TextStyle(fontSize: fontSize, fontWeight: fontWeight, decoration: decoration));
   }
 }

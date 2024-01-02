@@ -6,7 +6,7 @@ import '../../BloC/User/user_event.dart';
 import '../../BloC/User/user_state.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPage();

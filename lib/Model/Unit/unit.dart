@@ -10,6 +10,7 @@ class Unit {
       required this.minute,
       required this.second});
 
+  //Used to convert json to object, called in the API
   factory Unit.fromJson(Map<String, dynamic> json) {
     return Unit(
       nbUnits: json['NbUnits'],
@@ -19,6 +20,7 @@ class Unit {
     );
   }
 
+  //Used to register the object in the database, called in the API
   Map<String, dynamic> toJson() => {
         'NbUnits': nbUnits,
         'Hour': hour,

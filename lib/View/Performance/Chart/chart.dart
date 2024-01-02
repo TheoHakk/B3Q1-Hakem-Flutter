@@ -33,8 +33,8 @@ class ChartState extends State<Chart> {
   void initState() {
     super.initState();
 
-    duration = ((widget.machine.sendingTime)/1000) as int;
-    goal = (duration/60) * widget.machine.productionGoal;
+    duration = ((widget.machine.sendingTime) / 1000) as int;
+    goal = (duration / 60) * widget.machine.productionGoal;
 
     _unitsBloc = BlocProvider.of<UnitsBloc>(context);
     _unitsBloc.add(FetchLastUnitsEvent((widget.machine.id).toString()));
@@ -55,14 +55,18 @@ class ChartState extends State<Chart> {
         bloc: _unitsBloc,
         builder: (context, state) {
           if (state is UnitsLoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (state is UnitsLoadedState) {
             units = state.units;
             return buildChart();
           } else if (state is UnitsErrorState) {
             return const Text('Une erreur est survenue');
           }
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         });
   }
 
@@ -152,11 +156,7 @@ class ChartState extends State<Chart> {
             toY: unitValue,
             rodStackItems: [
               BarChartRodStackItem(
-                  0,
-                  unitValue,
-                  unitValue >= goal
-                      ? widget.light
-                      : widget.dark),
+                  0, unitValue, unitValue >= goal ? widget.light : widget.dark),
             ],
             borderRadius: BorderRadius.zero,
             width: barsWidth,

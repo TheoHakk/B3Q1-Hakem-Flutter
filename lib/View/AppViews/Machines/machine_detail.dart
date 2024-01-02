@@ -88,19 +88,24 @@ class _MachineDetail extends State<MachineDetail> {
             },
             builder: (context, state) {
               if (state is MachineInitialState) {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else if (state is MachineLoadingState) {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else if (state is MachineLoadedState) {
                 machine = state.machine;
                 duration = machine.sendingTime / 1000 as int;
-                print(duration);
                 timer.cancel();
                 timer = Timer.periodic(Duration(seconds: duration), (Timer t) {
                   _machineBloc.add(FetchMachineEvent(widget.id));
                 });
               } else if (state is MachineErrorState) {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               return Scaffold(
                 appBar: AppBar(

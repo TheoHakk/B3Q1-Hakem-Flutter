@@ -39,7 +39,7 @@ class _Performance extends State<Performance> {
     super.initState();
 
     duration = ((widget.machine.sendingTime) / 1000) as int;
-    goal = (duration/60) * widget.machine.productionGoal;
+    goal = (duration / 60) * widget.machine.productionGoal;
 
     _lastUnitBloc = BlocProvider.of<LastUnitBloc>(context);
     _lastUnitBloc.add(FetchLastUnit((widget.machine.id).toString()));
@@ -54,9 +54,13 @@ class _Performance extends State<Performance> {
         bloc: _lastUnitBloc,
         builder: (context, state) {
           if (state is LastUnitInitialState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (state is LastUnitLoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (state is LastUnitLoadedState) {
             Unit unit = state.unit;
             return _buildPerformanceView(unit, goal);
